@@ -1,0 +1,8 @@
+{
+  "timestamp": "2026-10-06T20:00:00Z",
+  "user": "jsmith",
+  "source_ip": "185.220.101.45",
+  "country": "DE",
+  "auth_result": "success",
+  "source": "entra_id"
+}

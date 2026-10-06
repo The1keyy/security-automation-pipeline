@@ -1,0 +1,25 @@
+[
+  {
+    "timestamp": "2026-10-06T14:00:00Z",
+    "user": "jsmith",
+    "source_ip": "73.21.44.10",
+    "country": "US",
+    "city": "Boston",
+    "latitude": 42.3601,
+    "longitude": -71.0589,
+    "auth_result": "success",
+    "source": "entra_id"
+  },
+  {
+    "timestamp": "2026-10-06T15:00:00Z",
+    "user": "jsmith",
+    "source_ip": "185.220.101.45",
+    "country": "DE",
+    "city": "Berlin",
+    "latitude": 52.5200,
+    "longitude": 13.4050,
+    "auth_result": "success",
+    "source": "entra_id"
+  }
+]
+

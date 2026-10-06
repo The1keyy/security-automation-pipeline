@@ -1,0 +1,42 @@
+[
+  {
+    "timestamp": "2026-10-06T15:00:00Z",
+    "user": "jsmith",
+    "source_ip": "185.220.101.45",
+    "country": "DE",
+    "auth_result": "failure",
+    "source": "entra_id"
+  },
+  {
+    "timestamp": "2026-10-06T15:01:00Z",
+    "user": "jsmith",
+    "source_ip": "185.220.101.45",
+    "country": "DE",
+    "auth_result": "failure",
+    "source": "entra_id"
+  },
+  {
+    "timestamp": "2026-10-06T15:02:00Z",
+    "user": "jsmith",
+    "source_ip": "185.220.101.45",
+    "country": "DE",
+    "auth_result": "failure",
+    "source": "entra_id"
+  },
+  {
+    "timestamp": "2026-10-06T15:03:00Z",
+    "user": "jsmith",
+    "source_ip": "185.220.101.45",
+    "country": "DE",
+    "auth_result": "failure",
+    "source": "entra_id"
+  },
+  {
+    "timestamp": "2026-10-06T15:04:00Z",
+    "user": "jsmith",
+    "source_ip": "185.220.101.45",
+    "country": "DE",
+    "auth_result": "failure",
+    "source": "entra_id"
+  }
+]

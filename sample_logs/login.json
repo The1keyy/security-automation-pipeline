@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-10-06T14:32:00Z",
+  "user": "jsmith",
+  "source_ip": "185.220.101.45",
+  "country": "DE",
+  "asn": "AS12345",
+  "device_id": "device-8821",
+  "user_agent": "Chrome/140",
+  "auth_result": "success",
+  "mfa_result": "approved",
+  "source": "entra_id"
+}

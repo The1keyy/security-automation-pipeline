@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-10-06T21:00:00Z",
+  "user": "jsmith",
+  "source_ip": "73.21.44.10",
+  "country": "US",
+  "auth_protocol": "IMAP",
+  "auth_result": "success",
+  "source": "entra_id"
+}

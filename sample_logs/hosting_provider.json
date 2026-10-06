@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-10-06T20:30:00Z",
+  "user": "jsmith",
+  "source_ip": "203.0.113.55",
+  "country": "US",
+  "asn": "AS-HOSTING-01",
+  "auth_result": "success",
+  "source": "entra_id"
+}

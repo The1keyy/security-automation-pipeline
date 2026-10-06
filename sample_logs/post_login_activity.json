@@ -1,0 +1,27 @@
+[
+  {
+    "timestamp": "2026-10-06T22:00:00Z",
+    "user": "jsmith",
+    "source_ip": "185.220.101.45",
+    "auth_result": "success",
+    "action": "login"
+  },
+  {
+    "timestamp": "2026-10-06T22:02:00Z",
+    "user": "jsmith",
+    "source_ip": "185.220.101.45",
+    "action": "new_mfa_method"
+  },
+  {
+    "timestamp": "2026-10-06T22:04:00Z",
+    "user": "jsmith",
+    "source_ip": "185.220.101.45",
+    "action": "mailbox_forwarding_rule"
+  },
+  {
+    "timestamp": "2026-10-06T22:06:00Z",
+    "user": "jsmith",
+    "source_ip": "185.220.101.45",
+    "action": "password_changed"
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-10-06T19:00:00Z",
+  "user": "jsmith",
+  "source_ip": "73.21.44.10",
+  "country": "US",
+  "device_id": "device-1001",
+  "user_agent": "Firefox/145",
+  "auth_result": "success",
+  "source": "entra_id"
+}
