@@ -185,3 +185,55 @@ Screenshots of the explainable risk model: threat intelligence, behavioral evide
 ### Risk scenarios
 
 ![Low, medium, high, and critical risk scenarios](ss/risk-scenarios.jpg)
+
+## Phase 6 incident report
+
+Screenshots of the incident report: executive summary, timeline, detection evidence, threat intelligence, risk breakdown, confidence, recommended response, simulated actions, gaps, ATT&CK mapping, and the text and HTML reports.
+
+### Executive summary
+
+![Security incident executive summary](ss/incident-executive-summary.jpg)
+
+### Incident timeline
+
+![Incident timeline](ss/incident-timeline.jpg)
+
+### Detection evidence
+
+![Detection evidence](ss/detection-evidence.jpg)
+
+### Threat intelligence findings
+
+![Threat intelligence findings](ss/threat-intelligence-findings.jpg)
+
+### Risk score breakdown
+
+![Risk score breakdown](ss/risk-score-breakdown.jpg)
+
+### Confidence analysis
+
+![Confidence analysis](ss/confidence-analysis.jpg)
+
+### Recommended response
+
+![Recommended response](ss/recommended-response.jpg)
+
+### Actions taken
+
+![Simulated response actions](ss/actions-taken.jpg)
+
+### Could not verify
+
+![Items the report could not verify](ss/could-not-verify.jpg)
+
+### MITRE ATT&CK mapping
+
+![MITRE ATT&CK mapping](ss/mitre-attack-mapping.jpg)
+
+### Text report
+
+![Text report generation](ss/text-report.jpg)
+
+### HTML report
+
+![HTML security incident report](ss/html-incident-report.jpg)
