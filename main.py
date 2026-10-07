@@ -1,30 +1,78 @@
-import json
-
-from detections.post_login_activity import detect_post_login_activity
+from enrichment.pipeline import enrich_ip
 
 
-try:
-    with open("sample_logs/post_login_activity.json", "r") as file:
-        events = json.load(file)
+ip_address = "185.220.101.45"
 
-    detected, suspicious_actions = detect_post_login_activity(events)
+results = enrich_ip(ip_address)
 
-    print("Suspicious Post-Login Activity Detection")
-    print("----------------------------------------")
-    print("User:", events[0]["user"])
-    print("Source IP:", events[0]["source_ip"])
+print("Security Threat Intelligence Pipeline")
+print("=====================================")
+print("Target IP:", ip_address)
+print()
 
-    if detected:
-        print("ALERT: Suspicious post-login activity detected")
+successful_providers = 0
+failed_providers = 0
 
-        for action in suspicious_actions:
-            print("-", action)
+
+for provider, result in results.items():
+
+    print(provider)
+    print("-" * len(provider))
+
+    if result.get("success"):
+        successful_providers += 1
+
+        if provider == "AbuseIPDB":
+            print("Abuse Score:", result.get("abuse_score"))
+            print("Reports:", result.get("total_reports"))
+            print("ISP:", result.get("isp"))
+            print("Cache:", result.get("cache"))
+
+        elif provider == "VirusTotal":
+            print("Malicious:", result.get("malicious"))
+            print("Suspicious:", result.get("suspicious"))
+            print("Reputation:", result.get("reputation"))
+
+        elif provider == "GreyNoise":
+            print("Internet Scanner:", result.get("noise"))
+            print("Classification:", result.get("classification"))
+            print("Name:", result.get("name"))
+
+        elif provider == "OTX":
+            print("Pulse Count:", result.get("pulse_count"))
+            print("Reputation:", result.get("reputation"))
+
+        elif provider == "Tor":
+            print("Tor Exit Node:", result.get("is_tor_exit"))
+
+        elif provider == "GeoIP":
+            print("Country:", result.get("country"))
+            print("City:", result.get("city"))
+            print("Timezone:", result.get("timezone"))
+
+        elif provider == "ASN":
+            print("ASN:", result.get("asn"))
+            print("Organization:", result.get("organization"))
+
+        elif provider == "Blocklist":
+            print("Blocklisted:", result.get("blocklisted"))
+
+        print("Status: OK")
 
     else:
-        print("No suspicious post-login activity detected.")
+        failed_providers += 1
+        print("Status: FAILED")
+        print("Reason:", result.get("error", "Unknown error"))
 
-except FileNotFoundError:
-    print("ERROR: Security log file was not found.")
+    print()
 
-except json.JSONDecodeError:
-    print("ERROR: Security log contains invalid JSON.")
+
+print("Pipeline Summary")
+print("----------------")
+print("Successful providers:", successful_providers)
+print("Failed providers:", failed_providers)
+
+if successful_providers > 0:
+    print("STATUS: Enrichment pipeline completed")
+else:
+    print("STATUS: No threat intelligence available")
