@@ -149,3 +149,39 @@ Screenshots from the runs so far are in the [`ss`](ss) folder.
 ### Full enrichment pipeline
 
 ![Security threat intelligence pipeline](ss/enrichment-pipeline.jpg)
+
+## Phase 4 risk score
+
+Screenshots of the explainable risk model: threat intelligence, behavioral evidence, user and asset impact, correlation, and confidence.
+
+### Threat intelligence score
+
+![Threat intelligence risk score](ss/threat-intelligence-score.jpg)
+
+### Behavioral evidence score
+
+![Behavioral evidence risk score](ss/behavior-score.jpg)
+
+### User and asset impact score
+
+![User and asset impact score](ss/impact-score.jpg)
+
+### Correlation score
+
+![Signal correlation score](ss/correlation-score.jpg)
+
+### Confidence score
+
+![Confidence score](ss/confidence-score.jpg)
+
+### Final risk score
+
+![Final security risk assessment](ss/final-risk-score.jpg)
+
+### Severity bands
+
+![Risk severity classification](ss/severity.jpg)
+
+### Risk scenarios
+
+![Low, medium, high, and critical risk scenarios](ss/risk-scenarios.jpg)
