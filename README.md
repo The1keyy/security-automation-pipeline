@@ -11,6 +11,26 @@ python3 main.py
 
 The sign-in detectors live in `detections/` with matching sample logs.
 
+## Research Basis
+
+The Phase 4 risk engine is research-inspired. It draws on SOC alert-prioritization research and established risk standards, then applies them as a simplified, explainable portfolio model. This project does not reproduce those academic models, and it does not implement CVSS as a scoring method for SOC alerts.
+
+Each case is scored from five factors:
+
+- Threat Intelligence
+- Behavioral Evidence
+- User / Asset Impact
+- Correlation
+- Confidence
+
+The sources below are design references only.
+
+- [Wang et al., AlertPro (Computers & Security, 2024)](https://doi.org/10.1016/j.cose.2023.103583) contributes context-aware SOC alert prioritization: ranking alerts with the surrounding investigation context rather than treating each alert in isolation. The project does not implement AlertPro's reinforcement-learning framework.
+- [Guo et al., "Intelligent priority awareness method for alert data in SOC threat response" (Journal of King Saud University Computer and Information Sciences, 2026)](https://doi.org/10.1007/s44443-026-01172-w) contributes multi-dimensional, dynamic SOC risk scoring and prioritization. The project does not implement that paper's knowledge-graph, semantic-integrity, or AHP scoring system.
+- [NIST SP 800-30 Rev. 1](https://doi.org/10.6028/NIST.SP.800-30r1) contributes the risk concepts of likelihood, context, and impact.
+- [MITRE ATT&CK](https://attack.mitre.org/) is the reference for mapping observed activity to adversary behavior and techniques.
+- [CVSS v4.0](https://www.first.org/cvss/v4.0/) is inspiration only for a transparent scoring structure and severity bands. Scores produced by this project are not CVSS scores.
+
 ## Enrichment
 
 - AbuseIPDB, with a local response cache
