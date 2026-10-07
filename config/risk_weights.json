@@ -1,0 +1,52 @@
+{
+  "threat_intelligence": {
+    "abuseipdb_90": 8,
+    "abuseipdb_50": 5,
+    "virustotal_5": 7,
+    "virustotal_1": 4,
+    "greynoise_malicious": 5,
+    "otx_10": 4,
+    "otx_1": 2,
+    "tor_exit_node": 3,
+    "blocklist": 3
+  },
+
+  "behavior": {
+    "impossible_travel": 6,
+    "success_after_failure": 4,
+    "brute_force": 4,
+    "password_spray": 5,
+    "credential_stuffing": 5,
+    "mfa_fatigue": 6,
+    "suspicious_post_login": 8,
+    "new_country": 2,
+    "new_device": 2,
+    "new_user_agent": 1,
+    "abnormal_login_time": 1
+  },
+
+  "impact": {
+    "privileged": 8,
+    "executive": 6,
+    "service": 5,
+    "normal": 2,
+    "critical_asset": 8,
+    "high_asset": 6,
+    "medium_asset": 3,
+    "sensitive_system": 4
+  },
+
+  "correlation": {
+    "success_failure_new_country": 2,
+    "impossible_travel_tor": 2,
+    "mfa_success_failure": 2,
+    "post_login_new_device": 2,
+    "password_spray_credential_stuffing": 2
+  },
+
+  "severity": {
+    "critical": 81,
+    "high": 63,
+    "medium": 36
+  }
+}
