@@ -186,6 +186,50 @@ Screenshots of the explainable risk model: threat intelligence, behavioral evide
 
 ![Low, medium, high, and critical risk scenarios](ss/risk-scenarios.jpg)
 
+## Phase 5 safe response
+
+Screenshots of the response controls: severity decisions, dry-run, IP and user allowlists, action rate limits, human approval, playbooks, audit logging, evidence, and rollback.
+
+### Response decision
+
+![Safe response decision engine](ss/response-decision.jpg)
+
+### Dry run
+
+![Safe response dry-run test](ss/response-dry-run.jpg)
+
+### IP allowlist
+
+![IP allowlist safety test](ss/ip-allowlist.jpg)
+
+### User allowlist
+
+![User allowlist safety test](ss/user-allowlist.jpg)
+
+### Action rate limit
+
+![Action rate-limit test](ss/action-rate-limit.jpg)
+
+### Human approval
+
+![Human approval required](ss/human-approval.jpg)
+
+### Playbooks
+
+![Critical response playbook test](ss/response-playbook.jpg)
+
+### Audit log
+
+![Audit logging test](ss/audit-log.jpg)
+
+### Response evidence
+
+![Response action evidence](ss/response-evidence.jpg)
+
+### Rollback
+
+![Response rollback test](ss/response-rollback.jpg)
+
 ## Phase 6 incident report
 
 Screenshots of the incident report: executive summary, timeline, detection evidence, threat intelligence, risk breakdown, confidence, recommended response, simulated actions, gaps, ATT&CK mapping, and the text and HTML reports.
