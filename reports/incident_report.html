@@ -1,0 +1,393 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Security Incident Report</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+            color: #1f2937;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        header {
+            background: #111827;
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            margin-top: 0;
+        }
+
+        .severity {
+            display: inline-block;
+            background: #991b1b;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        section {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(200px, 1fr)
+            );
+            gap: 15px;
+        }
+
+        .metric {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .metric strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .card {
+            background: #f9fafb;
+            border-left: 4px solid #374151;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 5px;
+        }
+
+        .warning {
+            border-left-color: #b45309;
+        }
+
+        .critical {
+            border-left-color: #991b1b;
+        }
+
+        ul {
+            line-height: 1.7;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+    <h1>Security Incident Report</h1>
+
+    <p>
+        Automated Security Analysis and Response Pipeline
+    </p>
+
+    <span class="severity">
+        CRITICAL
+    </span>
+</header>
+
+
+<section>
+    <h2>Executive Summary</h2>
+
+    <p>
+        A CRITICAL security incident was identified for user jsmith@company.com. The activity originated from source IP 185.220.101.45. The risk engine assigned a score of 86/90 with a confidence score of 10/10. A total of 4 suspicious indicators were identified.
+    </p>
+</section>
+
+
+<section>
+    <h2>Incident Overview</h2>
+
+    <div class="grid">
+
+        <div class="metric">
+            <strong>User</strong>
+            jsmith@company.com
+        </div>
+
+        <div class="metric">
+            <strong>Source IP</strong>
+            185.220.101.45
+        </div>
+
+        <div class="metric">
+            <strong>Risk Score</strong>
+            86/90
+        </div>
+
+        <div class="metric">
+            <strong>Confidence</strong>
+            10/10
+        </div>
+
+    </div>
+</section>
+
+
+<section>
+    <h2>Incident Timeline</h2>
+
+    <ul>
+        <li><strong>2026-10-07T14:00:00Z</strong> - Multiple failed login attempts detected</li><li><strong>2026-10-07T14:05:00Z</strong> - Successful login from suspicious IP</li><li><strong>2026-10-07T14:08:00Z</strong> - New MFA method added</li><li><strong>2026-10-07T14:10:00Z</strong> - Mailbox forwarding rule created</li>
+    </ul>
+</section>
+
+
+<section>
+    <h2>Account Details</h2>
+
+    <div class="grid">
+
+        <div class="metric">
+            <strong>Username</strong>
+            jsmith@company.com
+        </div>
+
+        <div class="metric">
+            <strong>Account Type</strong>
+            privileged
+        </div>
+
+        <div class="metric">
+            <strong>Department</strong>
+            IT
+        </div>
+
+        <div class="metric">
+            <strong>Status</strong>
+            active
+        </div>
+
+    </div>
+</section>
+
+
+<section>
+    <h2>Source Details</h2>
+
+    <div class="grid">
+
+        <div class="metric">
+            <strong>IP Address</strong>
+            185.220.101.45
+        </div>
+
+        <div class="metric">
+            <strong>Country</strong>
+            DE
+        </div>
+
+        <div class="metric">
+            <strong>City</strong>
+            Berlin
+        </div>
+
+        <div class="metric">
+            <strong>ASN</strong>
+            AS60729
+        </div>
+
+        <div class="metric">
+            <strong>Tor Exit Node</strong>
+            True
+        </div>
+
+    </div>
+</section>
+
+
+<section>
+    <h2>Detection Evidence</h2>
+
+    <div class='card'><strong>Impossible travel</strong><p>Successful logins occurred from US and DE within an unrealistic travel window.</p></div><div class='card'><strong>MFA fatigue</strong><p>Multiple MFA prompts were generated before successful authentication.</p></div><div class='card'><strong>Success after repeated failures</strong><p>Several failed authentication attempts were followed by a successful login.</p></div><div class='card'><strong>Suspicious post-login activity</strong><p>A new MFA method and mailbox forwarding rule were created after login.</p></div>
+</section>
+
+
+<section>
+    <h2>Threat Intelligence</h2>
+
+    <div class='card'><strong>AbuseIPDB</strong><p>Abuse confidence score: 100</p></div><div class='card'><strong>VirusTotal</strong><p>8 security vendors flagged the IP as malicious</p></div><div class='card'><strong>Tor Exit List</strong><p>IP is an active Tor exit node</p></div><div class='card'><strong>OTX</strong><p>IP appears in 12 threat intelligence pulses</p></div>
+</section>
+
+
+<section>
+    <h2>Risk Score Breakdown</h2>
+
+    <div class="grid">
+
+        <div class="metric">
+            <strong>Threat Intelligence</strong>
+            30/30
+        </div>
+
+        <div class="metric">
+            <strong>Behavior</strong>
+            28/30
+        </div>
+
+        <div class="metric">
+            <strong>Impact</strong>
+            20/20
+        </div>
+
+        <div class="metric">
+            <strong>Correlation</strong>
+            8/10
+        </div>
+
+        <div class="metric">
+            <strong>Final Risk</strong>
+            86/90
+        </div>
+
+    </div>
+</section>
+
+
+<section>
+    <h2>Confidence Analysis</h2>
+
+    <p>
+        <strong>Confidence Score:</strong>
+        10/10
+    </p>
+
+    <ul>
+        <li>Multiple threat intelligence sources returned usable data.</li><li>Multiple strong behavioral detections were observed.</li><li>No enrichment providers failed.</li><li>No important enrichment fields were missing.</li>
+    </ul>
+</section>
+
+
+<section>
+    <h2>Recommended Response</h2>
+
+    <p>
+        <strong>Response Action:</strong>
+        PREAPPROVED_PLAYBOOK_ONLY
+    </p>
+
+    <p>
+        <strong>Requires Approval:</strong>
+        True
+    </p>
+
+    <p>
+        <strong>Automatic:</strong>
+        False
+    </p>
+
+    <ul>
+        <li>Escalate immediately to a security analyst.</li><li>Use only a pre-approved containment playbook.</li><li>Consider revoking active sessions.</li><li>Consider disabling the account after approval.</li><li>Preserve evidence before additional response actions.</li>
+    </ul>
+</section>
+
+
+<section>
+    <h2>Actions Taken</h2>
+
+    <div class='card'><strong>REVOKE_ACTIVE_SESSIONS</strong><p>Target: jsmith@company.com</p><p>Approved: True</p><p>Executed: False</p><p>Dry Run: True</p><p>Status: Approved by analyst but simulated only</p></div><div class='card'><strong>BLOCK_IP</strong><p>Target: 185.220.101.45</p><p>Approved: True</p><p>Executed: False</p><p>Dry Run: True</p><p>Status: Approved by analyst but simulated only</p></div>
+</section>
+
+
+<section>
+    <h2>Could Not Verify</h2>
+
+    <ul>
+        <li><strong>Endpoint compromise:</strong> No endpoint telemetry was available.</li><li><strong>User intent:</strong> The user was not contacted during this simulated incident.</li><li><strong>Mailbox rule impact:</strong> No production mailbox data was accessed.</li>
+    </ul>
+</section>
+
+
+<section>
+    <h2>MITRE ATT&CK Mapping</h2>
+
+    <div class='card'><strong>T1078 - Valid Accounts</strong><p>A successful login occurred using the affected account.</p></div><div class='card'><strong>T1621 - Multi-Factor Authentication Request Generation</strong><p>Multiple MFA prompts were generated before successful authentication.</p></div><div class='card'><strong>T1098 - Account Manipulation</strong><p>A new MFA method was added after the suspicious login.</p></div><div class='card'><strong>T1114.003 - Email Forwarding Rule</strong><p>A mailbox forwarding rule was created after login.</p></div>
+</section>
+
+
+<section>
+    <h2>Technical Appendix</h2>
+
+    <p>
+        <strong>Pipeline Version:</strong>
+        1.0
+    </p>
+
+    <p>
+        <strong>Environment:</strong>
+        Synthetic portfolio lab
+    </p>
+
+    <p>
+        <strong>Dry Run:</strong>
+        True
+    </p>
+
+    <h3>Event IDs</h3>
+
+    <ul>
+        <li>evt-1001</li><li>evt-1002</li><li>evt-1003</li><li>evt-1004</li>
+    </ul>
+
+    <h3>Log Sources</h3>
+
+    <ul>
+        <li>Identity authentication logs</li><li>MFA logs</li><li>Cloud audit logs</li>
+    </ul>
+
+    <h3>Enrichment Sources</h3>
+
+    <ul>
+        <li>AbuseIPDB</li><li>VirusTotal</li><li>OTX</li><li>Tor Exit List</li>
+    </ul>
+</section>
+
+
+<footer>
+    Generated by Security Automation Pipeline
+</footer>
+
+</div>
+
+</body>
+</html>

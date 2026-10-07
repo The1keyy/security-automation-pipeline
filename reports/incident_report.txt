@@ -1,0 +1,125 @@
+SECURITY INCIDENT REPORT
+========================
+
+Executive Summary
+-----------------
+A CRITICAL security incident was identified for user jsmith@company.com. The activity originated from source IP 185.220.101.45. The risk engine assigned a score of 86/90 with a confidence score of 10/10. A total of 4 suspicious indicators were identified.
+
+Incident Details
+----------------
+User: jsmith@company.com
+Source IP: 185.220.101.45
+Severity: CRITICAL
+Risk Score: 86/90
+Confidence: 10/10
+
+Incident Timeline
+-----------------
+2026-10-07T14:00:00Z - Multiple failed login attempts detected
+2026-10-07T14:05:00Z - Successful login from suspicious IP
+2026-10-07T14:08:00Z - New MFA method added
+2026-10-07T14:10:00Z - Mailbox forwarding rule created
+
+Account Details
+---------------
+Username: jsmith@company.com
+Account Type: privileged
+Department: IT
+Status: active
+Normal Country: US
+
+Source Details
+--------------
+IP: 185.220.101.45
+Country: DE
+City: Berlin
+ASN: AS60729
+Tor Exit Node: True
+
+Detection Evidence
+------------------
+- Impossible travel: Successful logins occurred from US and DE within an unrealistic travel window.
+- MFA fatigue: Multiple MFA prompts were generated before successful authentication.
+- Success after repeated failures: Several failed authentication attempts were followed by a successful login.
+- Suspicious post-login activity: A new MFA method and mailbox forwarding rule were created after login.
+
+Threat Intelligence
+-------------------
+- AbuseIPDB: Abuse confidence score: 100
+- VirusTotal: 8 security vendors flagged the IP as malicious
+- Tor Exit List: IP is an active Tor exit node
+- OTX: IP appears in 12 threat intelligence pulses
+
+Risk Score Breakdown
+--------------------
+Threat Intelligence: 30/30
+Behavior: 28/30
+Impact: 20/20
+Correlation: 8/10
+Final Risk Score: 86/90
+
+Confidence Analysis
+-------------------
+Confidence Score: 10/10
+- Multiple threat intelligence sources returned usable data.
+- Multiple strong behavioral detections were observed.
+- No enrichment providers failed.
+- No important enrichment fields were missing.
+
+Recommended Actions
+-------------------
+Response Action: PREAPPROVED_PLAYBOOK_ONLY
+Requires Approval: True
+Automatic: False
+- Escalate immediately to a security analyst.
+- Use only a pre-approved containment playbook.
+- Consider revoking active sessions.
+- Consider disabling the account after approval.
+- Preserve evidence before additional response actions.
+
+Actions Taken
+-------------
+- REVOKE_ACTIVE_SESSIONS | Target: jsmith@company.com | Approved: True | Executed: False | Dry Run: True
+  Status: Approved by analyst but simulated only
+- BLOCK_IP | Target: 185.220.101.45 | Approved: True | Executed: False | Dry Run: True
+  Status: Approved by analyst but simulated only
+
+Could Not Verify
+----------------
+- Endpoint compromise: No endpoint telemetry was available.
+- User intent: The user was not contacted during this simulated incident.
+- Mailbox rule impact: No production mailbox data was accessed.
+
+MITRE ATT&CK Mapping
+--------------------
+- T1078 - Valid Accounts
+  Evidence: A successful login occurred using the affected account.
+- T1621 - Multi-Factor Authentication Request Generation
+  Evidence: Multiple MFA prompts were generated before successful authentication.
+- T1098 - Account Manipulation
+  Evidence: A new MFA method was added after the suspicious login.
+- T1114.003 - Email Forwarding Rule
+  Evidence: A mailbox forwarding rule was created after login.
+
+Technical Appendix
+------------------
+Pipeline Version: 1.0
+Environment: Synthetic portfolio lab
+Dry Run: True
+
+Event IDs
+- evt-1001
+- evt-1002
+- evt-1003
+- evt-1004
+
+Log Sources
+- Identity authentication logs
+- MFA logs
+- Cloud audit logs
+
+Enrichment Sources
+- AbuseIPDB
+- VirusTotal
+- OTX
+- Tor Exit List
