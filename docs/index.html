@@ -15,7 +15,7 @@
 <meta property="og:image" content="https://the1keyy.github.io/security-automation-pipeline/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230B1220'/%3E%3Cpath d='M8 17l5 5 11-12' fill='none' stroke='%2367B7D1' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="assets/style.css?v=2">
+<link rel="stylesheet" href="assets/style.css?v=3">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -44,13 +44,6 @@
 <section class="hero" id="top">
   <div class="wrap hero-grid">
     <div>
-      <div class="byline">
-        <img class="avatar lg" src="assets/portrait.png" width="84" height="84" alt="Keyshawn Jeannot">
-        <div>
-          <span class="who">Keyshawn Jeannot</span>
-          <span class="handle">GitHub · <a href="https://github.com/The1keyy">The1keyy</a></span>
-        </div>
-      </div>
       <p class="kicker">Security engineering case study</p>
       <h1>Security Automation<br>Pipeline</h1>
       <ol class="flow" aria-label="Pipeline">
@@ -69,6 +62,7 @@
           View GitHub repository
         </a>
         <a class="btn" href="#incident">View incident evidence</a>
+        <a class="tests" href="https://github.com/The1keyy/security-automation-pipeline/actions/workflows/tests.yml"><img alt="tests: passing" src="https://img.shields.io/github/actions/workflow/status/The1keyy/security-automation-pipeline/tests.yml?branch=main&amp;label=tests&amp;color=67B7D1&amp;labelColor=121C2B"></a>
       </div>
       <div class="chips" aria-label="Technologies in this project">
         <span>Python</span>
@@ -76,11 +70,7 @@
         <span>MITRE ATT&amp;CK</span>
         <span>REST APIs</span>
         <span>Threat intelligence</span>
-      </div>
-      <div class="badges">
-        <img alt="Python 3.11+" src="https://img.shields.io/badge/python-3.11+-67B7D1?style=flat&amp;labelColor=121C2B">
-        <a href="https://github.com/The1keyy/security-automation-pipeline/actions/workflows/tests.yml"><img alt="tests: passing" src="https://img.shields.io/github/actions/workflow/status/The1keyy/security-automation-pipeline/tests.yml?branch=main&amp;label=tests"></a>
-        <img alt="MIT license" src="https://img.shields.io/badge/license-MIT-8FAFC4?style=flat&amp;labelColor=121C2B">
+        <span>MIT</span>
       </div>
     </div>
 
@@ -117,7 +107,7 @@
       <li><span class="num">01</span><b>Detect</b><span>14 sign-in rules flag suspicious events.</span></li>
       <li><span class="num">02</span><b>Enrich</b><span>8 IP intel sources add context.</span></li>
       <li><span class="num">03</span><b>Risk + confidence</b><span>Threat, behavior, impact, correlation. Confidence is separate.</span></li>
-      <li><span class="num">04</span><b>Safe response</b><span>approval · allowlists · dry-run · rate limits</span></li>
+      <li><span class="num">04</span><b>Safe response</b><span>Approval, allowlists, dry run, and rate limits.</span></li>
       <li><span class="num">05</span><b>Report</b><span>Text and HTML incident reports.</span></li>
     </ol>
   </div>
