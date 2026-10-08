@@ -1,5 +1,15 @@
 venv/
+.venv/
 .env
 __pycache__/
 *.pyc
+.pytest_cache/
 .DS_Store
+
+# Generated on each run. The checked-in copy is reports/sample/.
+enrichment/cache.json
+response/audit_log.jsonl
+reports/incident_report.txt
+reports/incident_report.html
+reports/*.json
+!reports/sample/
