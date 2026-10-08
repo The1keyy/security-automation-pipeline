@@ -2,7 +2,7 @@
 Readme · MD
 # Security Automation Pipeline
  
-Detects, enriches, scores, and responds to security events automatically.
+A Python project that checks a suspicious sign-in, scores the risk, and writes a report. A person has to approve any action.
  
 [![Tests](https://img.shields.io/github/actions/workflow/status/The1keyy/security-automation-pipeline/tests.yml?branch=main&label=tests)](https://github.com/The1keyy/security-automation-pipeline/actions/workflows/tests.yml)
 ![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue)
