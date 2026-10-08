@@ -2,7 +2,7 @@
 
 An explainable security workflow for identity sign-in activity:
 
-**Detection → enrichment → research-informed risk scoring → human-controlled response → audit and evidence → MITRE ATT&CK mapping → analyst report.**
+**Detection → enrichment → research-informed risk scoring → human-controlled response → audit and evidence → MITRE ATT&CK mapping → analyst report → automated validation.**
 
 The project is a portfolio and learning lab, not a production SOAR platform. Incident data is synthetic. Containment is simulated. Dry-run mode stays on, so the pipeline does not disable accounts, revoke sessions, or change firewall rules.
 
@@ -13,6 +13,7 @@ The project is a portfolio and learning lab, not a production SOAR platform. Inc
 3. **Score.** Combine threat intelligence, behavior, impact, and correlation into a risk score, with confidence scored separately.
 4. **Respond.** Turn severity into a recommendation, then apply allowlists, approval, playbooks, rate limits, and dry-run controls.
 5. **Report.** Write a text and HTML incident report an analyst can review.
+6. **Validate.** Run the detectors against labeled synthetic scenarios with pytest.
 
 ## Run
 
@@ -31,6 +32,7 @@ python3 test_response_decision.py
 python3 test_text_report.py
 python3 test_html_report.py
 python3 test_end_to_end_report.py
+python3 -m pytest tests -q
 ```
 
 ## Project layout
@@ -44,6 +46,7 @@ python3 test_end_to_end_report.py
 | `config/` | Risk weights and severity thresholds |
 | `response/` | Decision, approval, allowlist, playbook, audit, and rollback controls |
 | `reports/` | Text and HTML incident reports |
+| `tests/` | Pytest suite for detections, severity, and response decisions |
 | `ss/` | Full screenshot set from the runs |
 
 The README below features the screenshots that show the safety model and the finished report. Every other run is linked from [`ss`](ss).
@@ -80,6 +83,7 @@ The portfolio risk model uses five factors:
 - No production firewall rules are changed.
 - Threat-intelligence results depend on external providers.
 - Missing evidence is reported. It is not filled in.
+- Detection metrics come from a small synthetic dataset. They are not production accuracy.
 
 ## Earlier stages
 
@@ -342,6 +346,110 @@ The appendix records event IDs, log sources, enrichment sources, pipeline versio
 - The HTML report file exists
 
 A passing run prints `FINAL STATUS: ALL REPORTING TESTS PASSED`.
+
+## Phase 7 — Automated testing and detection validation
+
+Phase 7 moves detection checks from one-off scripts into a repeatable pytest suite in `tests/`. Pytest is listed in `requirements.txt`.
+
+```text
+Detection logic
+→ Synthetic test scenarios
+→ Automated pytest validation
+→ Benign versus malicious comparison
+→ False-positive handling
+→ Detection quality metrics
+```
+
+The suite checks that selected detectors fire on malicious scenarios, stay quiet on benign logins, and apply false-positive suppression. It does not cover every attack or edge case.
+
+```bash
+python3 -m pytest tests -q
+```
+
+### 7.1 Smoke tests
+
+`tests/test_smoke.py` checks severity bands and the critical response decision.
+
+| Score | Severity |
+| --- | --- |
+| 2 | LOW |
+| 39 | MEDIUM |
+| 64 | HIGH |
+| 86 | CRITICAL |
+
+A CRITICAL decision must return `PREAPPROVED_PLAYBOOK_ONLY`, require approval, and stay non-automatic.
+
+### 7.2 Normal login
+
+`tests/test_normal_login.py` uses a successful login from a known country, device, and user agent, during a normal hour, from a non-Tor IP. It expects no alert from success-after-failure, brute force, password spray, credential stuffing, new country, new device, new user agent, abnormal login time, or Tor authentication.
+
+Several detectors return a tuple such as `(False, 0)` rather than a Boolean. The tests use a small helper, `was_detected()`, so pytest reads the detection flag from either shape. The new-device detector expects `device_id`, not `device`.
+
+![Normal login stays quiet](ss/pytest-normal-login.jpg)
+
+### 7.3 Brute force
+
+`tests/test_brute_force.py` repeats failed authentication for the same user from the same source IP and expects `detect_brute_force()` to fire.
+
+[Brute-force test](ss/pytest-brute-force.jpg)
+
+### 7.4 Password spray
+
+`tests/test_password_spray.py` uses one source IP against multiple users and expects the password-spray detector to fire.
+
+[Password-spray test](ss/pytest-password-spray.jpg)
+
+### 7.5 Credential stuffing
+
+`tests/test_credential_stuffing.py` matches the detector's actual rule: at least 5 unique users, at least 4 failures, and at least 1 success from the same source IP. The test checks the flag, the user count, the failure count, the success count, the source IP, and the successful user. It does not stop at "the detector fired."
+
+![Credential-stuffing test checks the full result](ss/pytest-credential-stuffing.jpg)
+
+### 7.6 Success after failure
+
+`tests/test_success_after_failure.py` places several failures before a successful login for the same account and expects that detector to fire.
+
+[Success-after-failure test](ss/pytest-success-after-failure.jpg)
+
+### 7.7 Impossible travel
+
+`tests/test_impossible_travel.py` moves a login from Boston to Berlin in about 30 minutes, with coordinates, VPN off, and two different ASNs (`AS10001` and `AS20002`). The test expects a detection, distance over 5,000 km, speed over 900 km/h, and the reason `Travel speed is physically unrealistic`.
+
+Writing this test found an edge case. If both events omit ASN, both values are `None`, and `None == None` takes the same-ASN suppression path. Missing ASN values should not be treated as a match. The current test supplies different ASNs. Treating a missing ASN as unknown is a future hardening change.
+
+![Impossible-travel test](ss/pytest-impossible-travel.jpg)
+
+### 7.8 Benign VPN
+
+`tests/test_benign_vpn.py` uses the same Boston-to-Berlin pair with `vpn` set on one login. Detection must be false, with the reason `VPN activity detected`. Geographic distance alone does not raise the alert.
+
+![VPN false-positive suppression](ss/pytest-benign-vpn.jpg)
+
+### 7.9 Tor authentication
+
+`tests/test_tor_login.py` signs in from `185.220.101.45` with that address on the Tor exit list and expects the Tor detector to fire.
+
+[Tor login test](ss/pytest-tor-login.jpg)
+
+### 7.10 New device
+
+`tests/test_new_device.py` uses `device_id` `unknown-laptop-99` against known devices `laptop-01`, `phone-01`, and `desktop-01`, and expects the new-device detector to fire.
+
+[New-device test](ss/pytest-new-device.jpg)
+
+### 7.11 Malicious versus benign
+
+`tests/test_malicious_vs_benign.py` compares one normal successful login with a burst of failures from one IP followed by a success. The benign case must not fire success-after-failure, brute force, or password spray. The malicious case must fire success-after-failure and brute force.
+
+![Benign activity stays quiet and the malicious pattern fires](ss/pytest-malicious-vs-benign.jpg)
+
+### 7.12 Detection quality metrics
+
+`tests/test_detection_metrics.py` labels a small synthetic set. Two benign cases are a normal success and a single failure. Three malicious cases are brute force, success after repeated failures, and password spray. Each case is classified with those three detectors.
+
+On the bundled synthetic validation scenarios, the tested detection subset achieved 1.00 precision, 1.00 recall, and a 0.00 false-positive rate: 3 true positives, 2 true negatives, 0 false positives, and 0 false negatives. These results are limited to the included synthetic dataset and are not presented as production detection performance.
+
+![Synthetic detection-quality metrics](ss/pytest-detection-metrics.jpg)
 
 ## License
 
