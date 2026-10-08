@@ -1,514 +1,370 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- EDIT ME: title and description -->
-  <title>Security Automation Pipeline</title>
-  <meta name="description" content="Detects, enriches, scores, and responds to security events automatically. A synthetic lab with explainable scoring and a person in the loop before containment.">
-  <meta name="theme-color" content="#0d1117">
-  <meta property="og:title" content="Security Automation Pipeline">
-  <meta property="og:description" content="Detects, enriches, scores, and responds to security events automatically.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://the1keyy.github.io/security-automation-pipeline/">
-  <meta property="og:image" content="https://the1keyy.github.io/security-automation-pipeline/assets/og-image.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Security Automation Pipeline">
-  <meta name="twitter:description" content="Detects, enriches, scores, and responds to security events automatically.">
-  <meta name="twitter:image" content="https://the1keyy.github.io/security-automation-pipeline/assets/og-image.png">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230d1117'/%3E%3Crect x='7' y='14' width='18' height='4' fill='%232ee6a6'/%3E%3C/svg%3E">
-  <style>
-    /* EDIT ME: colors */
-    :root {
-      --bg: #0d1117;
-      --surface: #161b22;
-      --border: #30363d;
-      --text: #e6edf3;
-      --text-muted: #9da7b3;
-      --accent: #2ee6a6;
-      --accent-ink: #04130d;
-      --code: #0d1117;
-      --sans: "Segoe UI", "Helvetica Neue", sans-serif;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    }
-    @media (prefers-color-scheme: light) {
-      :root {
-        --bg: #f6f8fa;
-        --surface: #ffffff;
-        --border: #d1d9e0;
-        --text: #1f2328;
-        --text-muted: #59636e;
-        --accent: #0a7d57;
-        --accent-ink: #f6f8fa;
-        --code: #eef1f4;
-      }
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--sans);
-      font-size: 17px;
-      line-height: 1.65;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      *, *::before, *::after { transition: none !important; }
-    }
-    img { max-width: 100%; height: auto; }
-    a { color: var(--accent); }
-    a:hover { text-decoration-thickness: 2px; }
-    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-    .skip {
-      position: absolute; left: 8px; top: -48px;
-      background: var(--accent); color: var(--accent-ink); padding: 8px 12px;
-    }
-    .skip:focus { top: 8px; }
-    .wrap { width: min(960px, calc(100% - 32px)); margin: 0 auto; }
-    header {
-      border-bottom: 1px solid var(--border);
-      background: var(--bg);
-    }
-    .bar {
-      min-height: 56px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-    .repo-name {
-      font-family: var(--mono);
-      color: var(--text);
-      text-decoration: none;
-      font-size: 15px;
-    }
-    .header-link {
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--text);
-      text-decoration: none;
-      font-size: 15px;
-    }
-    .header-link:hover { color: var(--accent); }
-    main { padding-bottom: 32px; }
-    .hero { padding-top: 48px; }
-    .path {
-      margin: 0 0 12px;
-      font-family: var(--mono);
-      font-size: 15px;
-      color: var(--text-muted);
-    }
-    h1 {
-      margin: 0 0 12px;
-      font-size: clamp(44px, 6vw, 52px);
-      line-height: 1.1;
-      letter-spacing: -0.03em;
-      font-weight: 650;
-      max-width: 16ch;
-    }
-    h2 {
-      margin: 0 0 16px;
-      font-size: clamp(28px, 4vw, 32px);
-      line-height: 1.2;
-      font-weight: 650;
-      letter-spacing: 0;
-    }
-    .tagline { margin: 0 0 12px; max-width: 68ch; font-size: 18px; }
-    .summary { margin: 0 0 20px; max-width: 68ch; color: var(--text-muted); }
-    .byline {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 0 0 24px;
-    }
-    .avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      overflow: hidden;
-      display: grid;
-      place-items: center;
-      background: var(--surface);
-      flex: none;
-    }
-    .avatar img { width: 40px; height: 40px; object-fit: cover; display: block; }
-    .initials { display: none; font-size: 15px; font-weight: 500; }
-    .avatar.fallback .initials { display: block; }
-    .avatar.fallback img { display: none; }
-    .name { font-size: 16px; font-weight: 500; color: var(--text); }
-    @media (min-width: 768px) {
-      .avatar, .avatar img { width: 48px; height: 48px; }
-    }
-    .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin: 0 0 16px; }
-    .btn {
-      min-height: 44px;
-      padding: 0 16px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border-radius: 8px;
-      border: 1px solid transparent;
-      text-decoration: none;
-      font-weight: 650;
-      font-size: 16px;
-      transition: background-color 150ms ease, border-color 150ms ease;
-    }
-    .btn-primary { background: var(--accent); color: var(--accent-ink); }
-    .btn-primary:hover { background: var(--accent); }
-    .btn-line { background: var(--surface); color: var(--text); border-color: var(--border); }
-    .btn-line:hover { border-color: var(--accent); color: var(--text); }
-    .text-link { color: var(--accent); font-size: 16px; }
-    .badges { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0; }
-    .badges img { height: 20px; width: auto; }
-    section.block { margin-top: 72px; }
-    .prose { max-width: 68ch; margin: 0 0 16px; }
-    .note {
-      max-width: 68ch;
-      margin: 0;
-      padding: 16px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: var(--surface);
-      color: var(--text);
-    }
-    .pipeline {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 8px;
-    }
-    @media (min-width: 900px) {
-      .pipeline { grid-template-columns: repeat(5, 1fr); gap: 12px; }
-    }
-    .node {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-    }
-    .node h3 { margin: 0 0 8px; font-family: var(--mono); font-size: 16px; }
-    .node p { margin: 0; color: var(--text-muted); font-size: 15px; }
-    .flow { width: 100%; height: 28px; display: none; }
-    @media (min-width: 900px) { .flow { display: block; margin-bottom: 8px; } }
-    .stats {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-    @media (min-width: 700px) { .stats { grid-template-columns: repeat(3, 1fr); } }
-    .stat {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-    }
-    .stat b {
-      display: block;
-      font-family: var(--mono);
-      font-size: 32px;
-      line-height: 1.1;
-      color: var(--accent);
-      font-weight: 650;
-    }
-    .stat span { display: block; margin-top: 8px; color: var(--text-muted); font-size: 15px; }
-    .caveat {
-      margin: 16px 0 0;
-      color: var(--text-muted);
-      font-size: 15px;
-      max-width: 68ch;
-    }
-    .proof {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-      align-items: start;
-    }
-    @media (min-width: 800px) { .proof { grid-template-columns: 1.15fr 0.85fr; } }
-    .frame {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    .frame img { display: block; width: 100%; background: var(--surface); }
-    figcaption { margin: 0; padding: 12px 16px 16px; color: var(--text-muted); font-size: 15px; }
-    .term {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    .term-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      color: var(--text-muted);
-      font-family: var(--mono);
-      font-size: 15px;
-    }
-    pre {
-      margin: 0;
-      padding: 8px 16px 16px;
-      overflow-x: auto;
-      background: var(--code);
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 15px;
-      line-height: 1.55;
-    }
-    .copy {
-      min-height: 44px;
-      padding: 0 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 15px;
-      cursor: pointer;
-    }
-    .copy:hover { border-color: var(--accent); }
-    .steps { margin: 0 0 16px; padding-left: 1.2em; max-width: 68ch; }
-    .steps li { margin: 8px 0; }
-    .ideas { margin: 16px 0 0; color: var(--text-muted); max-width: 68ch; }
-    details {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 8px 16px;
-      margin-top: 12px;
-    }
-    summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font-weight: 650; }
-    .tree {
-      font-family: var(--mono);
-      font-size: 15px;
-      color: var(--text-muted);
-      white-space: pre-wrap;
-    }
-    .checks { list-style: none; padding: 0; margin: 0; }
-    .checks li {
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    footer {
-      margin-top: 72px;
-      border-top: 1px solid var(--border);
-      padding: 24px 0 40px;
-      color: var(--text-muted);
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      font-size: 15px;
-    }
-    code { font-family: var(--mono); font-size: 0.95em; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Security Automation Pipeline</title>
+<meta name="description" content="Detects, enriches, scores, and responds to security events automatically. A synthetic portfolio lab with a person in the loop before containment.">
+<meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f6f8fa" media="(prefers-color-scheme: light)">
+<link rel="canonical" href="https://the1keyy.github.io/security-automation-pipeline/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"Security Automation Pipeline","description":"Detects, enriches, scores, and responds to security events automatically.","codeRepository":"https://github.com/The1keyy/security-automation-pipeline","programmingLanguage":"Python","license":"https://opensource.org/licenses/MIT","author":{"@type":"Person","name":"Keyshawn Jeannot"}}</script>
+<meta property="og:type" content="website">
+<meta property="og:title" content="Security Automation Pipeline">
+<meta property="og:description" content="Detects, enriches, scores, and responds to security events automatically.">
+<meta property="og:url" content="https://the1keyy.github.io/security-automation-pipeline/">
+<meta property="og:image" content="https://the1keyy.github.io/security-automation-pipeline/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d1117'/%3E%3Cpath d='M8 17l5 5 11-12' fill='none' stroke='%232ee6a6' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+/* EDIT ME: colors */
+:root{
+  --bg:#0d1117; --surface:#161b22; --inset:#0a0e13; --border:#30363d;
+  --text:#e6edf3; --text-muted:#9da7b3; --accent:#2ee6a6; --accent-ink:#04130d;
+  --warn:#e3b341; --crit:#ff7b72;
+}
+@media (prefers-color-scheme:light){
+  :root{--bg:#f6f8fa; --surface:#fbfcfd; --inset:#eef1f4; --border:#d1d9e0;
+    --text:#1f2328; --text-muted:#59636e; --accent:#0a7d57; --accent-ink:#f6fffb; --warn:#8a5a00; --crit:#cf222e}
+}
+*{box-sizing:border-box}
+:root{color-scheme:dark light}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);
+  font:17px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased}
+.mono,code,pre,.stat b{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--accent);color:var(--accent-ink);padding:8px 16px;border-radius:6px;z-index:9}
+.skip:focus{left:8px}
+.wrap{max-width:960px;margin:0 auto;padding:0 24px}
+header.top{border-bottom:1px solid var(--border)}
+header.top .wrap{display:flex;justify-content:space-between;align-items:center;min-height:56px}
+header.top .mono{font-size:15px;color:var(--text-muted)}
+header.top a{font-size:15px;font-weight:500}
+section{margin-top:88px}
+h1{font-size:clamp(34px,6vw,52px);line-height:1.1;letter-spacing:-.02em;margin:0 0 16px;font-weight:700}
+h2{font-size:clamp(24px,4vw,30px);line-height:1.25;margin:0 0 16px;font-weight:650}
+h3{font-size:18px;margin:0 0 4px}
+p{margin:0 0 16px;max-width:68ch}
+.muted{color:var(--text-muted)}
+.small{font-size:15px}
+
+/* hero */
+.hero{padding-top:64px}
+.repo{font-size:15px;color:var(--text-muted);margin-bottom:16px}
+.tagline{font-size:clamp(19px,2.6vw,22px);color:var(--text-muted);max-width:34ch;margin-bottom:24px}
+.byline{display:flex;align-items:center;gap:12px;margin-bottom:32px}
+.avatar{width:40px;height:40px;border-radius:50%;border:1px solid var(--border);object-fit:cover;background:var(--surface);
+  display:grid;place-items:center;font-size:14px;font-weight:600;color:var(--text-muted);overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.byline span.n{font-size:15px;font-weight:500}
+@media(min-width:768px){.avatar{width:48px;height:48px}.byline span.n{font-size:16px}}
+.actions{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-bottom:24px}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 20px;border-radius:8px;font-weight:600;font-size:16px;
+  text-decoration:none;border:1px solid var(--border);color:var(--text);background:var(--surface);transition:border-color .15s,background .15s;cursor:pointer;font-family:inherit}
+.btn:hover{border-color:var(--text-muted)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn svg{width:18px;height:18px;fill:currentColor}
+.badges{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.badges img{height:20px;display:block}
+
+/* pipeline: a real sequence, so numbered */
+.pipe{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:s}
+@media(min-width:768px){.pipe{grid-template-columns:repeat(5,1fr);gap:0}}
+.pipe li{counter-increment:s;position:relative;background:var(--surface);border:1px solid var(--border);padding:16px;
+  border-radius:12px}
+.pipe li::before{content:counter(s);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px;color:var(--accent);display:block;margin-bottom:8px}
+.pipe b{display:block;margin-bottom:4px}
+.pipe span{font-size:15px;color:var(--text-muted);line-height:1.5;display:block}
+@media(min-width:768px){
+  .pipe li{border-radius:0;margin-left:-1px}
+  .pipe li:first-child{border-radius:12px 0 0 12px;margin-left:0}
+  .pipe li:last-child{border-radius:0 12px 12px 0}
+  .pipe li:last-child::after{display:none}
+}
+
+/* results */
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(min-width:768px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--surface);border:1px solid var(--border);border-top:2px solid var(--accent);border-radius:12px;padding:20px 24px}
+.stat b{display:block;font-size:34px;line-height:1.1;color:var(--accent);font-weight:600}
+.stat span{font-size:15px;color:var(--text-muted);display:block;margin-top:8px;line-height:1.45}
+.facts{margin:24px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+.facts li{padding-left:20px;position:relative;max-width:68ch}
+.facts li::before{content:"";position:absolute;left:0;top:.7em;width:8px;height:2px;background:var(--text-muted)}
+.synth{margin-top:24px;border:1px dashed var(--border);border-radius:12px;padding:16px 24px}
+.synth dl{display:flex;flex-wrap:wrap;gap:8px 32px;margin:0 0 8px}
+.synth dt{font-size:15px;color:var(--text-muted)}
+.synth dd{margin:0;font-weight:600}
+.synth p{margin:0;font-size:15px;color:var(--text-muted)}
+
+/* case file: the memorable element */
+.case{display:grid;gap:24px}
+@media(min-width:860px){.case{grid-template-columns:1.15fr 1fr;align-items:start}}
+.frame{border:1px solid var(--border);border-radius:12px;background:var(--surface);overflow:hidden}
+.frame .bar{display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--inset)}
+.frame .bar i{width:10px;height:10px;border-radius:50%;background:var(--border)}
+.frame img{display:block;width:100%;height:auto}
+figcaption{font-size:15px;color:var(--text-muted);padding:12px 16px;border-top:1px solid var(--border)}
+figure{margin:0}
+.codebox{position:relative;border:1px solid var(--border);border-radius:12px;background:var(--inset)}
+.codebox pre{margin:0;padding:20px 24px;overflow-x:auto;font-size:15px;line-height:1.7}
+.codebox .copy{position:absolute;top:10px;right:10px;min-height:36px;padding:0 12px;font-size:14px;border-radius:6px}
+.codebox.has-copy pre{padding-top:52px}
+.risk{padding:16px 24px 20px;border-top:1px solid var(--border)}
+.risk .row{display:flex;justify-content:space-between;font-size:15px;margin-bottom:8px}
+.risk .row b{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--crit)}
+.crit{color:var(--crit);font-weight:700}
+.meter{height:8px;border-radius:4px;background:var(--border);overflow:hidden}
+.meter i{display:block;height:100%;width:95.5%;background:var(--crit);transform-origin:left;animation:fill 1s .2s ease-out both}
+@keyframes fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.risk small{display:block;margin-top:8px;color:var(--text-muted);font-size:14px}
+
+.note{border:1px solid var(--border);border-left:3px solid var(--warn);border-radius:8px;background:var(--surface);padding:16px 20px;max-width:68ch}
+.note p{margin:0}
+
+.steps{list-style:none;margin:0 0 24px;padding:0;display:grid;gap:12px;counter-reset:st;max-width:68ch}
+.steps li{counter-increment:st;display:grid;grid-template-columns:32px 1fr;gap:12px}
+.steps li::before{content:counter(st);width:32px;height:32px;border-radius:50%;border:1px solid var(--border);display:grid;place-items:center;
+  font-size:14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--accent)}
+code{font-size:.9em;background:var(--inset);border:1px solid var(--border);border-radius:4px;padding:1px 6px}
+.ideas{columns:2;column-gap:32px;padding-left:20px;max-width:68ch;margin:0 0 24px}
+@media(max-width:560px){.ideas{columns:1}}
+
+details{border:1px solid var(--border);border-radius:12px;background:var(--surface);margin-bottom:12px}
+summary{cursor:pointer;padding:16px 24px;font-weight:600;min-height:44px}
+details>div{padding:0 24px 20px}
+.tree{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.tree li{display:grid;grid-template-columns:130px 1fr;gap:12px;font-size:15px}
+.tree code{justify-self:start;color:var(--accent)}
+.refs{margin:0;padding-left:20px;display:grid;gap:8px}
+.refs span{color:var(--text-muted)}
+
+.road{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.road li{display:flex;gap:12px;align-items:flex-start}
+.road li::before{content:"";flex:none;width:18px;height:18px;margin-top:5px;border:1.5px solid var(--text-muted);border-radius:4px}
+
+footer{margin-top:104px;border-top:1px solid var(--border);padding:32px 0 48px;font-size:15px;color:var(--text-muted)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between}
+footer .links{display:flex;flex-wrap:wrap;gap:12px 24px}
+
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.meter i{animation:none}.btn{transition:none}}
+</style>
 </head>
 <body>
-  <a class="skip" href="#main">Skip to content</a>
-  <header>
-    <div class="wrap bar">
-      <!-- EDIT ME: header label -->
-      <a class="repo-name" href="#top">security-automation-pipeline</a>
-      <a class="header-link" href="https://github.com/The1keyy/security-automation-pipeline">GitHub</a>
-    </div>
-  </header>
-  <main id="main">
-    <div class="wrap hero" id="top">
-      <p class="path">The1keyy/security-automation-pipeline</p>
-      <h1>Security Automation Pipeline</h1>
-      <p class="tagline">Detects, enriches, scores, and responds to security events automatically.</p>
-      <p class="summary">A Python lab for one suspicious sign-in. It checks threat intel, scores the risk, and writes a report. Containment waits for a person.</p>
-      <div class="byline">
-        <span class="avatar">
-          <img src="img/keyshawn.jpg" width="48" height="48" alt="Keyshawn Jeannot">
-          <span class="initials">KJ</span>
-        </span>
-        <span class="name">Keyshawn Jeannot</span>
-      </div>
-      <div class="actions">
-        <!-- EDIT ME: repository URL -->
-        <a class="btn btn-primary" href="https://github.com/The1keyy/security-automation-pipeline">
-          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-            <path fill="currentColor" d="M8 0C3.6 0 0 3.6 0 8c0 3.5 2.3 6.5 5.5 7.6.4.1.7-.2.7-.4v-1.4c-2.2.5-2.7-1-2.7-1-.4-.9-.9-1.2-.9-1.2-.7-.5.1-.5.1-.5.8.1 1.2.8 1.2.8.7 1.2 1.9.9 2.3.7.1-.5.3-.9.5-1.1-1.8-.2-3.6-.9-3.6-4 0-.9.3-1.6.8-2.2-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.2.8a7.7 7.7 0 0 1 4 0c1.5-1 2.2-.8 2.2-.8.4 1.1.2 1.9.1 2.1.5.6.8 1.3.8 2.2 0 3.1-1.9 3.7-3.6 3.9.3.3.6.8.6 1.5v2.2c0 .2.3.5.7.4A8 8 0 0 0 16 8c0-4.4-3.6-8-8-8z"/>
-          </svg>
-          View repository on GitHub
-        </a>
-        <a class="text-link" href="#sample">See sample report</a>
-      </div>
-      <p class="badges">
-        <img alt="Python 3.11 or newer" src="https://img.shields.io/badge/python-3.11+-blue" width="104" height="20">
-        <a href="https://github.com/The1keyy/security-automation-pipeline/actions/workflows/tests.yml"><img alt="GitHub Actions test status" src="https://github.com/The1keyy/security-automation-pipeline/actions/workflows/tests.yml/badge.svg" width="104" height="20"></a>
-        <img alt="MIT license" src="https://img.shields.io/badge/license-MIT-blue" width="88" height="20">
-      </p>
-    </div>
+<a class="skip" href="#main">Skip to content</a>
 
-    <section class="wrap block" id="pipeline" aria-labelledby="pipeline-title">
-      <h2 id="pipeline-title">Pipeline</h2>
-      <svg class="flow" viewBox="0 0 920 28" role="img" aria-label="Detect, Enrich, Risk Score, Respond, Report">
-        <rect x="8" y="8" width="120" height="12" rx="2" fill="none" stroke="var(--border)"/>
-        <rect x="196" y="8" width="120" height="12" rx="2" fill="none" stroke="var(--border)"/>
-        <rect x="384" y="8" width="140" height="12" rx="2" fill="none" stroke="var(--border)"/>
-        <rect x="592" y="8" width="120" height="12" rx="2" fill="none" stroke="var(--border)"/>
-        <rect x="780" y="8" width="120" height="12" rx="2" fill="none" stroke="var(--border)"/>
-        <path d="M132 14h56M320 14h56M528 14h56M716 14h56" stroke="var(--accent)" stroke-width="1.5" fill="none"/>
-        <path d="M184 10l8 4-8 4M368 10l8 4-8 4M576 10l8 4-8 4M764 10l8 4-8 4" fill="var(--accent)"/>
-      </svg>
-      <div class="pipeline">
-        <article class="node"><h3>Detect</h3><p>Sign-in rules for brute force, spray, impossible travel, and MFA fatigue.</p></article>
-        <article class="node"><h3>Enrich</h3><p>Eight sources. One failure does not stop the others.</p></article>
-        <article class="node"><h3>Risk Score</h3><p>Threat, behavior, impact, and correlation, capped at 90.</p></article>
-        <article class="node"><h3>Respond</h3><p>Allowlists, playbooks, dry-run, audit, and approval before containment.</p></article>
-        <article class="node"><h3>Report</h3><p>Plain text and HTML for an analyst to read.</p></article>
-      </div>
-    </section>
+<header class="top">
+  <div class="wrap">
+    <span class="mono">security-automation-pipeline</span>
+    <a href="https://github.com/The1keyy/security-automation-pipeline">GitHub</a>
+  </div>
+</header>
 
-    <section class="wrap block" id="results" aria-labelledby="results-title">
-      <h2 id="results-title">Key results</h2>
-      <div class="stats">
-        <article class="stat"><b>14</b><span>sign-in detectors, including brute force, spray, impossible travel, and MFA fatigue</span></article>
-        <article class="stat"><b>13</b><span>pytest checks, including a benign login that stays quiet</span></article>
-        <article class="stat"><b>8</b><span>enrichment sources; one failure does not stop the others</span></article>
-        <article class="stat"><b>90</b><span>risk cap, split into threat, behavior, impact, and correlation</span></article>
-        <article class="stat"><b>86/90</b><span>sample case, confidence 10/10, severity CRITICAL, approval required</span></article>
-        <article class="stat"><b>4</b><span>ATT&amp;CK techniques in the sample: T1078, T1621, T1098, T1114.003</span></article>
-      </div>
-      <p class="caveat">Synthetic scenarios only: precision 1.00, recall 1.00, false-positive rate 0.00. Not production accuracy.</p>
-    </section>
+<main id="main" class="wrap">
 
-    <section class="wrap block" id="sample" aria-labelledby="sample-title">
-      <h2 id="sample-title">Sample report</h2>
-      <div class="proof">
-        <figure class="frame">
-          <img src="ss/html-incident-report.jpg" width="1024" height="801" alt="HTML incident report from the synthetic lab" loading="lazy">
-          <figcaption>HTML incident report from the synthetic lab.</figcaption>
-        </figure>
-        <div class="term">
-          <div class="term-bar">
-            <span>incident_report.txt</span>
-            <button class="copy" type="button" data-copy="sample-out">Copy</button>
-          </div>
-          <pre id="sample-out">Severity: CRITICAL
+<!-- HERO -->
+<section class="hero" style="margin-top:0">
+  <div class="repo mono">The1keyy/security-automation-pipeline</div>
+  <h1>Security Automation Pipeline</h1>
+  <p class="tagline">Detects, enriches, scores, and responds to security events automatically.</p>
+
+  <div class="byline">
+    <!-- EDIT ME: put your photo at docs/img/keyshawn.jpg (square, about 400x400) -->
+    <span class="avatar" id="av"><img src="img/keyshawn.jpg" width="48" height="48" alt="Keyshawn Jeannot" onerror="this.remove();document.getElementById('av').textContent='KJ'"></span>
+    <span class="n">Keyshawn Jeannot</span>
+  </div>
+
+  <div class="actions">
+    <a class="btn primary" href="https://github.com/The1keyy/security-automation-pipeline">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.71 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.19c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+      View repository on GitHub
+    </a>
+    <a href="#case">See sample report</a>
+  </div>
+  <div class="badges">
+    <img alt="Python 3.11+" src="https://img.shields.io/badge/python-3.11+-blue">
+    <a href="https://github.com/The1keyy/security-automation-pipeline/actions/workflows/tests.yml"><img alt="Tests" src="https://github.com/The1keyy/security-automation-pipeline/actions/workflows/tests.yml/badge.svg"></a>
+    <img alt="MIT license" src="https://img.shields.io/badge/license-MIT-blue">
+  </div>
+</section>
+
+<!-- PIPELINE -->
+<section aria-labelledby="how">
+  <h2 id="how">How it works</h2>
+  <ol class="pipe">
+    <li><b>Detect</b><span>14 sign-in rules flag suspicious events.</span></li>
+    <li><b>Enrich</b><span>8 IP intel sources add context.</span></li>
+    <li><b>Risk score</b><span>Threat, behavior, impact, correlation.</span></li>
+    <li><b>Respond</b><span>A person approves before containment.</span></li>
+    <li><b>Report</b><span>Text and HTML incident reports.</span></li>
+  </ol>
+</section>
+
+<!-- RESULTS -->
+<section aria-labelledby="results">
+  <h2 id="results">Key results</h2>
+  <div class="stats">
+    <div class="stat"><b>14</b><span>sign-in detectors</span></div>
+    <div class="stat"><b>13</b><span>pytest checks</span></div>
+    <div class="stat"><b>8</b><span>enrichment sources</span></div>
+    <div class="stat"><b>90</b><span>maximum risk score</span></div>
+  </div>
+  <ul class="facts">
+    <li>Detectors cover brute force, spray, impossible travel, and MFA fatigue.</li>
+    <li>A benign login stays quiet, and the tests check that.</li>
+    <li>One enrichment failure does not stop the other sources.</li>
+    <li>The sample case maps to four ATT&amp;CK techniques: T1078, T1621, T1098, T1114.003.</li>
+  </ul>
+  <div class="synth">
+    <dl>
+      <div><dt>Precision</dt><dd class="mono">1.00</dd></div>
+      <div><dt>Recall</dt><dd class="mono">1.00</dd></div>
+      <div><dt>False-positive rate</dt><dd class="mono">0.00</dd></div>
+    </dl>
+    <p>Measured on the bundled synthetic scenarios only. Not production accuracy.</p>
+  </div>
+</section>
+
+<!-- SAMPLE CASE -->
+<section id="case" aria-labelledby="case-h">
+  <h2 id="case-h">One sample case, end to end</h2>
+  <p class="muted">The pipeline produced this report from synthetic events in <code>sample_logs/</code>.</p>
+  <div class="case">
+    <figure class="frame">
+      <div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
+      <img src="https://the1keyy.github.io/security-automation-pipeline/ss/html-incident-report.jpg" width="1200" height="800" loading="lazy" alt="HTML incident report from the synthetic lab">
+      <figcaption>The HTML incident report from the synthetic lab.</figcaption>
+    </figure>
+    <div class="codebox has-copy">
+      <button class="btn copy" type="button" data-copy="out">Copy</button>
+<pre id="out">Severity: <span class="crit">CRITICAL</span>
 Risk Score: 86/90
 Confidence: 10/10
 Action: PREAPPROVED_PLAYBOOK_ONLY
 Requires Approval: True
 Automatic: False</pre>
-        </div>
+      <div class="risk">
+        <div class="row"><span>Risk score</span><b>86 of 90</b></div>
+        <div class="meter" role="img" aria-label="Risk score 86 out of 90"><i></i></div>
+        <small>Nothing runs automatically. A person approves the playbook first.</small>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <section class="wrap block" id="why" aria-labelledby="why-title">
-      <h2 id="why-title">Why this exists</h2>
-      <p class="prose">A SOC cannot investigate every alert. This pipeline adds context, a separate confidence score, and a person in the loop before containment.</p>
-      <p class="note">It is a synthetic portfolio lab, not a production detection benchmark, and it does not change live accounts, sessions, or firewall rules.</p>
-    </section>
+<!-- WHY -->
+<section aria-labelledby="why">
+  <h2 id="why">Why this exists</h2>
+  <p>A SOC cannot investigate every alert. This pipeline adds context, a separate confidence score, and a person in the loop before containment.</p>
+  <div class="note">
+    <p><strong>Read this first.</strong> It is a synthetic portfolio lab, not a production detection benchmark. It does not change live accounts, sessions, or firewall rules.</p>
+  </div>
+</section>
 
-    <section class="wrap block" id="run" aria-labelledby="run-title">
-      <h2 id="run-title">Run it</h2>
-      <div class="term">
-        <div class="term-bar">
-          <span>terminal</span>
-          <button class="copy" type="button" data-copy="quick-start">Copy</button>
-        </div>
-        <pre id="quick-start">python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+<!-- RUN IT -->
+<section aria-labelledby="run">
+  <h2 id="run">Run it</h2>
+  <div class="codebox has-copy">
+    <button class="btn copy" type="button" data-copy="qs">Copy</button>
+<pre id="qs">python3 -m venv .venv &amp;&amp; source .venv/bin/activate
 pip install -r requirements.txt
 pytest</pre>
-      </div>
-      <p class="prose">Copy <code>.env.example</code> to <code>.env</code> before <code>python3 main.py</code>. The names are <code>ABUSEIPDB_API_KEY</code>, <code>VIRUSTOTAL_API_KEY</code>, <code>GREYNOISE_API_KEY</code>, and <code>OTX_API_KEY</code>.</p>
-    </section>
+  </div>
+  <p style="margin-top:16px">To run <code>main.py</code>, copy <code>.env.example</code> to <code>.env</code> first and fill in <code>ABUSEIPDB_API_KEY</code>, <code>VIRUSTOTAL_API_KEY</code>, <code>GREYNOISE_API_KEY</code>, and <code>OTX_API_KEY</code>.</p>
+</section>
 
-    <section class="wrap block" id="fork" aria-labelledby="fork-title">
-      <h2 id="fork-title">Make it yours</h2>
-      <ol class="steps">
-        <li>Fork the repository, or start with Use this template.</li>
-        <li>Add API keys, or run on the sample data already in the repo.</li>
-        <li>Run pytest, then change a detector and see a test fail.</li>
-      </ol>
-      <div class="actions">
-        <a class="btn btn-primary" href="https://github.com/The1keyy/security-automation-pipeline/generate">
-          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.6 0 0 3.6 0 8c0 3.5 2.3 6.5 5.5 7.6.4.1.7-.2.7-.4v-1.4c-2.2.5-2.7-1-2.7-1-.4-.9-.9-1.2-.9-1.2-.7-.5.1-.5.1-.5.8.1 1.2.8 1.2.8.7 1.2 1.9.9 2.3.7.1-.5.3-.9.5-1.1-1.8-.2-3.6-.9-3.6-4 0-.9.3-1.6.8-2.2-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.2.8a7.7 7.7 0 0 1 4 0c1.5-1 2.2-.8 2.2-.8.4 1.1.2 1.9.1 2.1.5.6.8 1.3.8 2.2 0 3.1-1.9 3.7-3.6 3.9.3.3.6.8.6 1.5v2.2c0 .2.3.5.7.4A8 8 0 0 0 16 8c0-4.4-3.6-8-8-8z"/></svg>
-          Use this template
-        </a>
-        <a class="btn btn-line" href="https://github.com/The1keyy/security-automation-pipeline/fork">Fork</a>
-      </div>
-      <p class="ideas">Ideas to extend: new detectors, enrichment sources, playbooks, and report formats.</p>
-      <p class="prose"><a href="https://github.com/The1keyy/security-automation-pipeline">The1keyy/security-automation-pipeline</a></p>
-    </section>
+<!-- MAKE IT YOURS -->
+<section aria-labelledby="mine">
+  <h2 id="mine">Make it yours</h2>
+  <p>It is MIT licensed. Copy it, change it, break it.</p>
+  <ol class="steps">
+    <li><div>Fork the repository, or use it as a template.</div></li>
+    <li><div>Add your API keys, or run it on the sample logs.</div></li>
+    <li><div>Run <code>pytest</code>, then change something and see what fails.</div></li>
+  </ol>
+  <div class="actions">
+    <a class="btn primary" href="https://github.com/The1keyy/security-automation-pipeline/generate">Use this template</a>
+    <a class="btn" href="https://github.com/The1keyy/security-automation-pipeline/fork">Fork</a>
+    <a class="btn" href="https://github.com/The1keyy/security-automation-pipeline">Repository</a>
+  </div>
+  <h3>Ideas to extend</h3>
+  <ul class="ideas">
+    <li>A new sign-in detector</li>
+    <li>Another enrichment source</li>
+    <li>A new response playbook</li>
+    <li>A different report format</li>
+  </ul>
+</section>
 
-    <section class="wrap block" aria-labelledby="more-title">
-      <h2 id="more-title">Reference</h2>
-      <details>
-        <summary>Project structure</summary>
-        <pre class="tree">detections/   sign-in rules
-enrichment/   IP intel lookups and a local cache
-risk/         explainable score and severity
-response/     approval, allowlists, playbooks, dry-run, audit, rollback
-reports/      text and HTML writers, plus reports/sample/
-tests/        pytest suite
-config/       weights and thresholds
-sample_logs/  synthetic events
-ss/           screenshots from lab runs
-docs/         GitHub Pages site</pre>
-      </details>
-      <details>
-        <summary>Research basis</summary>
-        <p class="prose">The score is research-inspired. It does not reproduce the cited models, and it does not calculate CVSS.</p>
-        <ul>
-          <li><a href="https://doi.org/10.1016/j.cose.2023.103583">AlertPro, Computers &amp; Security, 2024</a></li>
-          <li><a href="https://doi.org/10.1007/s44443-026-01172-w">Guo et al., 2026</a></li>
-          <li><a href="https://doi.org/10.6028/NIST.SP.800-30r1">NIST SP 800-30 Rev. 1</a></li>
-          <li><a href="https://attack.mitre.org/">MITRE ATT&amp;CK</a></li>
-          <li><a href="https://www.first.org/cvss/v4.0/">CVSS v4.0</a></li>
-        </ul>
-      </details>
-    </section>
-
-    <section class="wrap block" id="roadmap" aria-labelledby="roadmap-title">
-      <h2 id="roadmap-title">Roadmap</h2>
-      <ul class="checks">
-        <li>Treat a missing ASN as unknown instead of a match in impossible travel</li>
-        <li>Run detect, score, and report from one command</li>
+<!-- DETAILS -->
+<section aria-labelledby="more">
+  <h2 id="more">Under the hood</h2>
+  <details>
+    <summary>Project structure</summary>
+    <div>
+      <ul class="tree">
+        <li><code>detections/</code><span>sign-in rules</span></li>
+        <li><code>enrichment/</code><span>IP intel lookups and a local cache</span></li>
+        <li><code>risk/</code><span>explainable score and severity</span></li>
+        <li><code>response/</code><span>approval, allowlists, playbooks, dry-run, audit, rollback</span></li>
+        <li><code>reports/</code><span>text and HTML writers, plus reports/sample/</span></li>
+        <li><code>tests/</code><span>pytest suite</span></li>
+        <li><code>config/</code><span>weights and thresholds</span></li>
+        <li><code>sample_logs/</code><span>synthetic events</span></li>
+        <li><code>ss/</code><span>screenshots from lab runs</span></li>
+        <li><code>docs/</code><span>this site</span></li>
       </ul>
-    </section>
-  </main>
-  <footer class="wrap">
+      <p class="small muted" style="margin:16px 0 0">Built with Python 3.13, pytest, and requests. Reports are plain text and HTML.</p>
+    </div>
+  </details>
+  <details>
+    <summary>Research basis</summary>
+    <div>
+      <p class="small muted">The score is research-inspired. It does not reproduce the cited models, and it does not calculate CVSS for alerts.</p>
+      <ul class="refs">
+        <li><a href="https://doi.org/10.1016/j.cose.2023.103583">AlertPro, Computers &amp; Security, 2024</a> <span>prioritize with context</span></li>
+        <li><a href="https://doi.org/10.1007/s44443-026-01172-w">Guo et al., 2026</a> <span>score across more than one dimension</span></li>
+        <li><a href="https://doi.org/10.6028/NIST.SP.800-30r1">NIST SP 800-30 Rev. 1</a> <span>likelihood, context, and impact</span></li>
+        <li><a href="https://attack.mitre.org/">MITRE ATT&amp;CK</a> <span>map behavior to techniques</span></li>
+        <li><a href="https://www.first.org/cvss/v4.0/">CVSS v4.0</a> <span>clear components and severity bands only</span></li>
+      </ul>
+    </div>
+  </details>
+</section>
+
+<!-- ROADMAP -->
+<section aria-labelledby="road">
+  <h2 id="road">Roadmap</h2>
+  <ul class="road">
+    <li>Treat a missing ASN as unknown, not a match, in impossible travel.</li>
+    <li>Run detect, score, and report from one command.</li>
+  </ul>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
     <span>MIT License</span>
-    <span>
-      <a href="https://github.com/The1keyy/security-automation-pipeline/edit/main/README.md">Improve this page</a>
-      ·
+    <span class="links">
       <a href="https://github.com/The1keyy/security-automation-pipeline">Repository</a>
+      <a href="https://github.com/The1keyy/security-automation-pipeline/edit/main/README.md">Improve this page</a>
     </span>
-  </footer>
-  <script>
-    document.querySelectorAll(".avatar img").forEach(function (img) {
-      img.addEventListener("error", function () {
-        img.parentElement.classList.add("fallback");
-      });
-    });
-    document.querySelectorAll("[data-copy]").forEach(function (button) {
-      button.addEventListener("click", function () {
-        var text = document.getElementById(button.getAttribute("data-copy")).innerText;
-        var label = button.textContent;
-        function show(next) {
-          button.textContent = next;
-          setTimeout(function () { button.textContent = label; }, 1500);
-        }
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).then(function () { show("Copied"); }, function () { show("Select text"); });
-        } else {
-          show("Select text");
-        }
-      });
-    });
-  </script>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('[data-copy]').forEach(function(b){
+  b.addEventListener('click',function(){
+    var t=document.getElementById(b.dataset.copy).innerText;
+    var done=function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)};
+    if(navigator.clipboard){navigator.clipboard.writeText(t).then(done,function(){})}
+  });
+});
+</script>
 </body>
 </html>
