@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Security Automation Pipeline</title>
+  <meta name="description" content="Detects, enriches, scores, and responds to security events automatically. A synthetic security lab with explainable risk scoring and human approval.">
+  <meta name="theme-color" content="#0a0f16">
+  <meta property="og:title" content="Security Automation Pipeline">
+  <meta property="og:description" content="Detect, enrich, score, respond, and report. Synthetic lab. Human approval before containment.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://the1keyy.github.io/security-automation-pipeline/">
+  <meta property="og:image" content="https://the1keyy.github.io/security-automation-pipeline/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Security Automation Pipeline">
+  <meta name="twitter:description" content="Detect, enrich, score, respond, and report. Synthetic lab. Human approval before containment.">
+  <meta name="twitter:image" content="https://the1keyy.github.io/security-automation-pipeline/assets/og-image.png">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="wrap">
+    <header>
+      <a class="brand" href="index.html">Security Automation Pipeline</a>
+      <nav aria-label="Page">
+        <a href="#pipeline">Pipeline</a>
+        <a href="#sample">Sample</a>
+        <a href="#about">About</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <p class="kicker">Synthetic security lab</p>
+        <h1>Detect, enrich, score, and respond.</h1>
+        <p class="lede">An explainable pipeline for identity alerts. It scores the case, then stops for a person before any containment. Nothing here touches a production account.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="https://github.com/The1keyy/security-automation-pipeline">View the code</a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/in/keyshawnjeannot">LinkedIn</a>
+        </div>
+        <div class="stats" aria-label="Project results">
+          <div class="stat"><b>14</b><span>sign-in detectors</span></div>
+          <div class="stat"><b>13</b><span>pytest checks passing</span></div>
+          <div class="stat"><b>8</b><span>intel sources</span></div>
+          <div class="stat"><b>4</b><span>ATT&amp;CK techniques in the sample</span></div>
+        </div>
+      </section>
+
+      <section id="pipeline">
+        <h2>Five stages</h2>
+        <p class="section-copy">Each stage explains itself. A failed intel source does not stop the rest, and a high-risk action stays in dry-run until an analyst approves a known playbook.</p>
+        <div class="cards">
+          <article class="card">
+            <em>01</em>
+            <h3>Detect</h3>
+            <p>Brute force, spray, impossible travel, MFA fatigue, and a quiet path for a normal login.</p>
+          </article>
+          <article class="card">
+            <em>02</em>
+            <h3>Enrich</h3>
+            <p>AbuseIPDB, VirusTotal, GreyNoise, OTX, Tor, GeoIP, ASN, and a local blocklist.</p>
+          </article>
+          <article class="card">
+            <em>03</em>
+            <h3>Score</h3>
+            <p>Threat, behavior, impact, and correlation, with confidence scored separately. Cap is 90.</p>
+          </article>
+          <article class="card">
+            <em>04</em>
+            <h3>Respond</h3>
+            <p>Allowlists, rate limits, approval, and pre-approved playbooks. Dry-run stays on.</p>
+          </article>
+          <article class="card">
+            <em>05</em>
+            <h3>Report</h3>
+            <p>Text and HTML, with ATT&amp;CK mapping and an explicit list of what could not be verified.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="sample">
+        <h2>Sample output</h2>
+        <p class="section-copy">Documentation data only. This is not a live customer event.</p>
+        <div class="terminal" role="region" aria-label="Sanitized sample output">
+          <div class="bar">pytest · synthetic case</div>
+          <pre>Severity:     CRITICAL
+Risk score:   86/90
+Confidence:   10/10
+User:         analyst.demo@example.com
+Source:       203.0.113.45
+Detections:   impossible travel, MFA fatigue, success after failure
+Action:       PREAPPROVED_PLAYBOOK_ONLY
+Approved:     true
+Executed:     <span class="ok">false</span>
+Dry run:      <span class="ok">true</span></pre>
+        </div>
+      </section>
+
+      <section>
+        <h2>Stack</h2>
+        <ul class="chips">
+          <li>Python 3.13</li>
+          <li>pytest</li>
+          <li>requests</li>
+          <li>MITRE ATT&amp;CK</li>
+          <li>NIST SP 800-30</li>
+          <li>CVSS v4.0 as structure only</li>
+        </ul>
+      </section>
+
+      <section id="about">
+        <div class="about">
+          <img src="assets/portrait.png" width="120" height="120" alt="Portrait of Keyshawn Jeannot">
+          <div>
+            <h2>Keyshawn Jeannot</h2>
+            <p>Information Security Analyst. This repo is a portfolio lab for detection, scoring, and safe response.</p>
+            <p><a href="https://www.linkedin.com/in/keyshawnjeannot">LinkedIn</a></p>
+            <p>Résumé: coming soon.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Synthetic data. Containment is simulated.</span>
+      <a href="https://github.com/The1keyy/security-automation-pipeline">GitHub</a>
+    </footer>
+  </div>
+</body>
+</html>
