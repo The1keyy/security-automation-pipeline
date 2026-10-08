@@ -147,6 +147,23 @@ details>div{padding:0 24px 20px}
 .road li{display:flex;gap:12px;align-items:flex-start}
 .road li::before{content:"";flex:none;width:18px;height:18px;margin-top:5px;border:1.5px solid var(--text-muted);border-radius:4px}
 
+.cards,.evidence,.techs{display:grid;gap:12px}
+@media(min-width:768px){
+  .cards{grid-template-columns:repeat(3,1fr)}
+  .techs{grid-template-columns:repeat(4,1fr)}
+}
+.card,.chip,.callout{background:var(--surface);border:1px solid var(--border);border-radius:12px}
+.card,.callout{padding:20px 24px}
+.card h3,.callout h3{margin:0 0 8px}
+.card p,.callout p{margin:0;font-size:15px;color:var(--text-muted)}
+.callout p{margin-bottom:12px}
+.chip{display:block;padding:16px;text-decoration:none;color:inherit}
+.chip b{display:block;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--accent);font-size:15px;font-weight:600}
+.chip span{display:block;margin-top:4px;font-size:15px;color:var(--text-muted);line-height:1.45}
+.chip:hover{border-color:var(--text-muted)}
+.evidence figcaption b{display:block;color:var(--text);font-weight:600;margin-bottom:4px}
+.techs{margin-top:24px}
+
 footer{margin-top:104px;border-top:1px solid var(--border);padding:32px 0 48px;font-size:15px;color:var(--text-muted)}
 footer .wrap{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between}
 footer .links{display:flex;flex-wrap:wrap;gap:12px 24px}
@@ -198,10 +215,29 @@ footer .links{display:flex;flex-wrap:wrap;gap:12px 24px}
   <ol class="pipe">
     <li><b>Detect</b><span>14 sign-in rules flag suspicious events.</span></li>
     <li><b>Enrich</b><span>8 IP intel sources add context.</span></li>
-    <li><b>Risk score</b><span>Threat, behavior, impact, correlation.</span></li>
-    <li><b>Respond</b><span>A person approves before containment.</span></li>
+    <li><b>Risk + confidence</b><span>Threat, behavior, impact, correlation. Confidence is separate.</span></li>
+    <li><b>Safe response</b><span>approval · allowlists · dry-run · rate limits</span></li>
     <li><b>Report</b><span>Text and HTML incident reports.</span></li>
   </ol>
+</section>
+
+<!-- DIFFERENT -->
+<section aria-labelledby="diff">
+  <h2 id="diff">What makes this different</h2>
+  <div class="cards">
+    <article class="card">
+      <h3>Explainable</h3>
+      <p>Risk and confidence are separate, and the report shows how the assessment was produced.</p>
+    </article>
+    <article class="card">
+      <h3>Safe</h3>
+      <p>Containment is guarded by dry-run mode, allowlists, rate limits, approval, and pre-approved playbooks.</p>
+    </article>
+    <article class="card">
+      <h3>Tested</h3>
+      <p>Benign and malicious scenarios are validated with automated pytest tests, including false-positive handling.</p>
+    </article>
+  </div>
 </section>
 
 <!-- RESULTS -->
@@ -225,7 +261,8 @@ footer .links{display:flex;flex-wrap:wrap;gap:12px 24px}
       <div><dt>Recall</dt><dd class="mono">1.00</dd></div>
       <div><dt>False-positive rate</dt><dd class="mono">0.00</dd></div>
     </dl>
-    <p>Measured on the bundled synthetic scenarios only. Not production accuracy.</p>
+    <p>Synthetic validation results only. These metrics are not production detection-performance claims.</p>
+    <p style="margin:8px 0 0">The suite covers normal login, brute force, password spray, credential stuffing, success after failure, impossible travel, VPN suppression, Tor login, new device, and malicious versus benign cases.</p>
   </div>
 </section>
 
@@ -254,6 +291,32 @@ Automatic: False</pre>
       </div>
     </div>
   </div>
+  <div class="techs" aria-label="ATT&CK techniques in the sample incident">
+    <a class="chip" href="https://attack.mitre.org/techniques/T1078/"><b>T1078</b><span>Valid Accounts</span></a>
+    <a class="chip" href="https://attack.mitre.org/techniques/T1621/"><b>T1621</b><span>Multi-Factor Authentication Request Generation</span></a>
+    <a class="chip" href="https://attack.mitre.org/techniques/T1098/"><b>T1098</b><span>Account Manipulation</span></a>
+    <a class="chip" href="https://attack.mitre.org/techniques/T1114/003/"><b>T1114.003</b><span>Email Forwarding Rule</span></a>
+  </div>
+</section>
+
+<!-- VALIDATED -->
+<section aria-labelledby="valid">
+  <h2 id="valid">Validated behavior</h2>
+  <p class="muted">Malicious sequences trigger. Benign activity stays quiet. VPN context can suppress a false impossible-travel alert.</p>
+  <div class="evidence">
+    <figure class="frame">
+      <img src="ss/pytest-normal-login.jpg" width="1024" height="106" loading="lazy" alt="Pytest result for a normal login that stays quiet">
+      <figcaption><b>Normal login.</b> A benign sign-in stays quiet. No suspicious detection is expected.</figcaption>
+    </figure>
+    <figure class="frame">
+      <img src="ss/pytest-impossible-travel.jpg" width="1024" height="108" loading="lazy" alt="Pytest result for impossible travel detection">
+      <figcaption><b>Impossible travel.</b> A geographically impossible login sequence triggers detection.</figcaption>
+    </figure>
+    <figure class="frame">
+      <img src="ss/pytest-benign-vpn.jpg" width="1024" height="97" loading="lazy" alt="Pytest result showing VPN context suppresses impossible travel">
+      <figcaption><b>Benign VPN.</b> The impossible-travel alert is suppressed when VPN context explains the location change.</figcaption>
+    </figure>
+  </div>
 </section>
 
 <!-- WHY -->
@@ -261,8 +324,13 @@ Automatic: False</pre>
   <h2 id="why">Why this exists</h2>
   <p>A SOC cannot investigate every alert. This pipeline adds context, a separate confidence score, and a person in the loop before containment.</p>
   <div class="note">
-    <p><strong>Read this first.</strong> It is a synthetic portfolio lab, not a production detection benchmark. It does not change live accounts, sessions, or firewall rules.</p>
+    <p><strong>Read this first.</strong> It is a synthetic portfolio lab, not a production detection benchmark. Containment is simulated: it does not disable live accounts, revoke live sessions, or change firewall rules. A provider can fail without stopping the others, and missing evidence is listed instead of guessed.</p>
   </div>
+  <aside class="callout" style="margin-top:24px">
+    <h3>Research-informed scoring</h3>
+    <p>Risk prioritization is research-inspired, using ideas from AlertPro, NIST SP 800-30, MITRE ATT&amp;CK, and recent SOC alert-prioritization research. It does not reproduce those models, and it does not calculate CVSS for alerts.</p>
+    <a href="#research">Research basis</a>
+  </aside>
 </section>
 
 <!-- RUN IT -->
@@ -280,7 +348,7 @@ pytest</pre>
 <!-- MAKE IT YOURS -->
 <section aria-labelledby="mine">
   <h2 id="mine">Make it yours</h2>
-  <p>It is MIT licensed. Copy it, change it, break it.</p>
+  <p>It is MIT licensed. Fork it, extend it, and test your changes.</p>
   <ol class="steps">
     <li><div>Fork the repository, or use it as a template.</div></li>
     <li><div>Add your API keys, or run it on the sample logs.</div></li>
@@ -321,7 +389,7 @@ pytest</pre>
       <p class="small muted" style="margin:16px 0 0">Built with Python 3.13, pytest, and requests. Reports are plain text and HTML.</p>
     </div>
   </details>
-  <details>
+  <details id="research">
     <summary>Research basis</summary>
     <div>
       <p class="small muted">The score is research-inspired. It does not reproduce the cited models, and it does not calculate CVSS for alerts.</p>
@@ -341,7 +409,7 @@ pytest</pre>
   <h2 id="road">Roadmap</h2>
   <ul class="road">
     <li>Treat a missing ASN as unknown, not a match, in impossible travel.</li>
-    <li>Run detect, score, and report from one command.</li>
+    <li>Run detect, score, and report from one command. <code>main.py</code> currently enriches a single IP.</li>
   </ul>
 </section>
 
@@ -358,6 +426,12 @@ pytest</pre>
 </footer>
 
 <script>
+document.querySelectorAll('a[href="#research"]').forEach(function(a){
+  a.addEventListener('click',function(){
+    var d=document.getElementById('research');
+    if(d) d.open=true;
+  });
+});
 document.querySelectorAll('[data-copy]').forEach(function(b){
   b.addEventListener('click',function(){
     var t=document.getElementById(b.dataset.copy).innerText;
