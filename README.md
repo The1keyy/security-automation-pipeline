@@ -2,7 +2,7 @@
 
 Detects, enriches, scores, and responds to security events automatically.
 
-![Python](https://img.shields.io/badge/python-3.11+-blue) [![Tests](https://github.com/The1keyy/security-automation-pipeline/actions/workflows/tests.yml/badge.svg)](https://github.com/The1keyy/security-automation-pipeline/actions/workflows/tests.yml) ![License](https://img.shields.io/badge/license-MIT-blue) [![Live site](https://img.shields.io/badge/site-live-2ee6a6)](https://the1keyy.github.io/security-automation-pipeline/)
+![Python](https://img.shields.io/badge/python-3.11+-blue) [![tests: passing](https://img.shields.io/github/actions/workflow/status/The1keyy/security-automation-pipeline/tests.yml?branch=main&label=tests)](https://github.com/The1keyy/security-automation-pipeline/actions/workflows/tests.yml) ![License](https://img.shields.io/badge/license-MIT-blue) [![Live site](https://img.shields.io/badge/site-live-2ee6a6)](https://the1keyy.github.io/security-automation-pipeline/)
 
 ![HTML incident report from the synthetic lab](ss/html-incident-report.jpg)
 
