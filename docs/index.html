@@ -4,415 +4,375 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Security Automation Pipeline</title>
-<meta name="description" content="Detects, enriches, scores, and responds to security events automatically. A synthetic portfolio lab with a person in the loop before containment.">
-<meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#f6f8fa" media="(prefers-color-scheme: light)">
+<meta name="description" content="A Python project that checks a suspicious sign-in, scores the risk, and writes a report. A person has to approve any action.">
+<meta name="theme-color" content="#0B1220">
 <link rel="canonical" href="https://the1keyy.github.io/security-automation-pipeline/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"Security Automation Pipeline","description":"Detects, enriches, scores, and responds to security events automatically.","codeRepository":"https://github.com/The1keyy/security-automation-pipeline","programmingLanguage":"Python","license":"https://opensource.org/licenses/MIT","author":{"@type":"Person","name":"Keyshawn Jeannot"}}</script>
 <meta property="og:type" content="website">
 <meta property="og:title" content="Security Automation Pipeline">
-<meta property="og:description" content="Detects, enriches, scores, and responds to security events automatically.">
+<meta property="og:description" content="A Python project that checks a suspicious sign-in, scores the risk, and writes a report. A person has to approve any action.">
 <meta property="og:url" content="https://the1keyy.github.io/security-automation-pipeline/">
 <meta property="og:image" content="https://the1keyy.github.io/security-automation-pipeline/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d1117'/%3E%3Cpath d='M8 17l5 5 11-12' fill='none' stroke='%232ee6a6' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<style>
-/* EDIT ME: colors */
-:root{
-  --bg:#0d1117; --surface:#161b22; --inset:#0a0e13; --border:#30363d;
-  --text:#e6edf3; --text-muted:#9da7b3; --accent:#2ee6a6; --accent-ink:#04130d;
-  --warn:#e3b341; --crit:#ff7b72;
-}
-@media (prefers-color-scheme:light){
-  :root{--bg:#f6f8fa; --surface:#fbfcfd; --inset:#eef1f4; --border:#d1d9e0;
-    --text:#1f2328; --text-muted:#59636e; --accent:#0a7d57; --accent-ink:#f6fffb; --warn:#8a5a00; --crit:#cf222e}
-}
-*{box-sizing:border-box}
-:root{color-scheme:dark light}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--text);
-  font:17px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-  -webkit-font-smoothing:antialiased}
-.mono,code,pre,.stat b{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-a{color:var(--accent);text-underline-offset:3px}
-a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
-.skip{position:absolute;left:-999px;top:8px;background:var(--accent);color:var(--accent-ink);padding:8px 16px;border-radius:6px;z-index:9}
-.skip:focus{left:8px}
-.wrap{max-width:960px;margin:0 auto;padding:0 24px}
-header.top{border-bottom:1px solid var(--border)}
-header.top .wrap{display:flex;justify-content:space-between;align-items:center;min-height:56px}
-header.top .mono{font-size:15px;color:var(--text-muted)}
-header.top a{font-size:15px;font-weight:500}
-section{margin-top:88px}
-h1{font-size:clamp(34px,6vw,52px);line-height:1.1;letter-spacing:-.02em;margin:0 0 16px;font-weight:700}
-h2{font-size:clamp(24px,4vw,30px);line-height:1.25;margin:0 0 16px;font-weight:650}
-h3{font-size:18px;margin:0 0 4px}
-p{margin:0 0 16px;max-width:68ch}
-.muted{color:var(--text-muted)}
-.small{font-size:15px}
-
-/* hero */
-.hero{padding-top:64px}
-.repo{font-size:15px;color:var(--text-muted);margin-bottom:16px}
-.tagline{font-size:clamp(19px,2.6vw,22px);color:var(--text-muted);max-width:34ch;margin-bottom:12px}
-.summary{margin:0 0 24px;max-width:62ch}
-.byline{display:flex;align-items:center;gap:12px;margin-bottom:32px}
-.avatar{width:40px;height:40px;border-radius:50%;border:1px solid var(--border);object-fit:cover;background:var(--surface);
-  display:grid;place-items:center;font-size:14px;font-weight:600;color:var(--text-muted);overflow:hidden}
-.avatar img{width:100%;height:100%;object-fit:cover;display:block}
-.byline span.n{font-size:15px;font-weight:500}
-@media(min-width:768px){.avatar{width:48px;height:48px}.byline span.n{font-size:16px}}
-.actions{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-bottom:24px}
-.btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 20px;border-radius:8px;font-weight:600;font-size:16px;
-  text-decoration:none;border:1px solid var(--border);color:var(--text);background:var(--surface);transition:border-color .15s,background .15s;cursor:pointer;font-family:inherit}
-.btn:hover{border-color:var(--text-muted)}
-.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.btn.primary:hover{filter:brightness(1.08)}
-.btn svg{width:18px;height:18px;fill:currentColor}
-.badges{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.badges img{height:20px;display:block}
-
-/* pipeline: a real sequence, so numbered */
-.pipe{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:s}
-@media(min-width:768px){.pipe{grid-template-columns:repeat(5,1fr);gap:0}}
-.pipe li{counter-increment:s;position:relative;background:var(--surface);border:1px solid var(--border);padding:16px;
-  border-radius:12px}
-.pipe li::before{content:counter(s);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px;color:var(--accent);display:block;margin-bottom:8px}
-.pipe b{display:block;margin-bottom:4px}
-.pipe span{font-size:15px;color:var(--text-muted);line-height:1.5;display:block}
-@media(min-width:768px){
-  .pipe li{border-radius:0;margin-left:-1px}
-  .pipe li:first-child{border-radius:12px 0 0 12px;margin-left:0}
-  .pipe li:last-child{border-radius:0 12px 12px 0}
-  .pipe li:last-child::after{display:none}
-}
-
-/* results */
-.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-@media(min-width:768px){.stats{grid-template-columns:repeat(4,1fr)}}
-.stat{background:var(--surface);border:1px solid var(--border);border-top:2px solid var(--accent);border-radius:12px;padding:20px 24px}
-.stat b{display:block;font-size:34px;line-height:1.1;color:var(--accent);font-weight:600}
-.stat span{font-size:15px;color:var(--text-muted);display:block;margin-top:8px;line-height:1.45}
-.facts{margin:24px 0 0;padding:0;list-style:none;display:grid;gap:8px}
-.facts li{padding-left:20px;position:relative;max-width:68ch}
-.facts li::before{content:"";position:absolute;left:0;top:.7em;width:8px;height:2px;background:var(--text-muted)}
-.synth{margin-top:24px;border:1px dashed var(--border);border-radius:12px;padding:16px 24px}
-.synth dl{display:flex;flex-wrap:wrap;gap:8px 32px;margin:0 0 8px}
-.synth dt{font-size:15px;color:var(--text-muted)}
-.synth dd{margin:0;font-weight:600}
-.synth p{margin:0;font-size:15px;color:var(--text-muted)}
-
-/* case file: the memorable element */
-.case{display:grid;gap:24px}
-@media(min-width:860px){.case{grid-template-columns:1.15fr 1fr;align-items:start}}
-.frame{border:1px solid var(--border);border-radius:12px;background:var(--surface);overflow:hidden}
-.frame .bar{display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--inset)}
-.frame .bar i{width:10px;height:10px;border-radius:50%;background:var(--border)}
-.frame img{display:block;width:100%;height:auto}
-figcaption{font-size:15px;color:var(--text-muted);padding:12px 16px;border-top:1px solid var(--border)}
-figure{margin:0}
-.codebox{position:relative;border:1px solid var(--border);border-radius:12px;background:var(--inset)}
-.codebox pre{margin:0;padding:20px 24px;overflow-x:auto;font-size:15px;line-height:1.7}
-.codebox .copy{position:absolute;top:10px;right:10px;min-height:36px;padding:0 12px;font-size:14px;border-radius:6px}
-.codebox.has-copy pre{padding-top:52px}
-.risk{padding:16px 24px 20px;border-top:1px solid var(--border)}
-.risk .row{display:flex;justify-content:space-between;font-size:15px;margin-bottom:8px}
-.risk .row b{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--crit)}
-.crit{color:var(--crit);font-weight:700}
-.meter{height:8px;border-radius:4px;background:var(--border);overflow:hidden}
-.meter i{display:block;height:100%;width:95.5%;background:var(--crit);transform-origin:left;animation:fill 1s .2s ease-out both}
-@keyframes fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-.risk small{display:block;margin-top:8px;color:var(--text-muted);font-size:14px}
-
-.note{border:1px solid var(--border);border-left:3px solid var(--warn);border-radius:8px;background:var(--surface);padding:16px 20px;max-width:68ch}
-.note p{margin:0}
-
-.steps{list-style:none;margin:0 0 24px;padding:0;display:grid;gap:12px;counter-reset:st;max-width:68ch}
-.steps li{counter-increment:st;display:grid;grid-template-columns:32px 1fr;gap:12px}
-.steps li::before{content:counter(st);width:32px;height:32px;border-radius:50%;border:1px solid var(--border);display:grid;place-items:center;
-  font-size:14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--accent)}
-code{font-size:.9em;background:var(--inset);border:1px solid var(--border);border-radius:4px;padding:1px 6px}
-.ideas{columns:2;column-gap:32px;padding-left:20px;max-width:68ch;margin:0 0 24px}
-@media(max-width:560px){.ideas{columns:1}}
-
-details{border:1px solid var(--border);border-radius:12px;background:var(--surface);margin-bottom:12px}
-summary{cursor:pointer;padding:16px 24px;font-weight:600;min-height:44px}
-details>div{padding:0 24px 20px}
-.tree{display:grid;gap:8px;margin:0;padding:0;list-style:none}
-.tree li{display:grid;grid-template-columns:130px 1fr;gap:12px;font-size:15px}
-.tree code{justify-self:start;color:var(--accent)}
-.refs{margin:0;padding-left:20px;display:grid;gap:8px}
-.refs span{color:var(--text-muted)}
-
-.road{list-style:none;padding:0;margin:0;display:grid;gap:8px}
-.road li{display:flex;gap:12px;align-items:flex-start}
-.road li::before{content:"";flex:none;width:18px;height:18px;margin-top:5px;border:1.5px solid var(--text-muted);border-radius:4px}
-
-.cards,.evidence,.techs{display:grid;gap:12px}
-@media(min-width:768px){
-  .cards{grid-template-columns:repeat(3,1fr)}
-  .techs{grid-template-columns:repeat(4,1fr)}
-}
-.card,.chip,.callout{background:var(--surface);border:1px solid var(--border);border-radius:12px}
-.card,.callout{padding:20px 24px}
-.card h3,.callout h3{margin:0 0 8px}
-.card p,.callout p{margin:0;font-size:15px;color:var(--text-muted)}
-.callout p{margin-bottom:12px}
-.chip{display:block;padding:16px;text-decoration:none;color:inherit}
-.chip b{display:block;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--accent);font-size:15px;font-weight:600}
-.chip span{display:block;margin-top:4px;font-size:15px;color:var(--text-muted);line-height:1.45}
-.chip:hover{border-color:var(--text-muted)}
-.evidence figcaption b{display:block;color:var(--text);font-weight:600;margin-bottom:4px}
-.techs{margin-top:24px}
-
-footer{margin-top:104px;border-top:1px solid var(--border);padding:32px 0 48px;font-size:15px;color:var(--text-muted)}
-footer .wrap{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between}
-footer .links{display:flex;flex-wrap:wrap;gap:12px 24px}
-
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.meter i{animation:none}.btn{transition:none}}
-</style>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230B1220'/%3E%3Cpath d='M8 17l5 5 11-12' fill='none' stroke='%2367B7D1' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/style.css?v=2">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
-<header class="top">
-  <div class="wrap">
-    <span class="mono">security-automation-pipeline</span>
-    <a href="https://github.com/The1keyy/security-automation-pipeline">GitHub</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#overview">
+      <img class="avatar sm" src="assets/portrait.png" width="36" height="36" alt="">
+      <span>Keyshawn Jeannot</span>
+    </a>
+    <nav class="site-nav" aria-label="Page">
+      <a href="#overview">Overview</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#results">Results</a>
+      <a href="#incident">Incident</a>
+      <a href="#evidence">Evidence</a>
+      <a href="#controls">Controls</a>
+      <a href="#research">Research</a>
+      <a href="#run">Run it</a>
+    </nav>
   </div>
 </header>
 
-<main id="main" class="wrap">
+<main id="main">
 
-<!-- HERO -->
-<section class="hero" style="margin-top:0">
-  <div class="repo mono">The1keyy/security-automation-pipeline</div>
-  <h1>Security Automation Pipeline</h1>
-  <p class="tagline">Detects, enriches, scores, and responds to security events automatically.</p>
-  <p class="summary">A Python project that checks a suspicious sign-in, scores the risk, and writes a report. A person has to approve any action.</p>
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="byline">
+        <img class="avatar lg" src="assets/portrait.png" width="84" height="84" alt="Keyshawn Jeannot">
+        <div>
+          <span class="who">Keyshawn Jeannot</span>
+          <span class="handle">GitHub · <a href="https://github.com/The1keyy">The1keyy</a></span>
+        </div>
+      </div>
+      <p class="kicker">Security engineering case study</p>
+      <h1>Security Automation<br>Pipeline</h1>
+      <ol class="flow" aria-label="Pipeline">
+        <li>Detect</li>
+        <li>Enrich</li>
+        <li>Score</li>
+        <li>Respond</li>
+        <li>Report</li>
+      </ol>
+      <p class="lede">Detects, enriches, scores, and responds to security events automatically.</p>
+      <p>A Python project that checks a suspicious sign-in, scores the risk, and writes a report. A person has to approve any action.</p>
+      <p class="small muted">Synthetic events only. This is a portfolio lab, not a production detection benchmark.</p>
+      <div class="actions">
+        <a class="btn primary" href="https://github.com/The1keyy/security-automation-pipeline">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.71 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.19c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          View GitHub repository
+        </a>
+        <a class="btn" href="#incident">View incident evidence</a>
+      </div>
+      <div class="chips" aria-label="Technologies in this project">
+        <span>Python</span>
+        <span>pytest</span>
+        <span>MITRE ATT&amp;CK</span>
+        <span>REST APIs</span>
+        <span>Threat intelligence</span>
+      </div>
+      <div class="badges">
+        <img alt="Python 3.11+" src="https://img.shields.io/badge/python-3.11+-67B7D1?style=flat&amp;labelColor=121C2B">
+        <a href="https://github.com/The1keyy/security-automation-pipeline/actions/workflows/tests.yml"><img alt="tests: passing" src="https://img.shields.io/github/actions/workflow/status/The1keyy/security-automation-pipeline/tests.yml?branch=main&amp;label=tests"></a>
+        <img alt="MIT license" src="https://img.shields.io/badge/license-MIT-8FAFC4?style=flat&amp;labelColor=121C2B">
+      </div>
+    </div>
 
-  <div class="byline">
-    <!-- EDIT ME: put your photo at docs/img/keyshawn.jpg (square, about 400x400) -->
-    <span class="avatar" id="av"><img src="img/keyshawn.jpg" width="48" height="48" alt="Keyshawn Jeannot" onerror="this.remove();document.getElementById('av').textContent='KJ'"></span>
-    <span class="n">Keyshawn Jeannot</span>
-  </div>
-
-  <div class="actions">
-    <a class="btn primary" href="https://github.com/The1keyy/security-automation-pipeline">
-      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.71 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.19c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
-      View repository on GitHub
-    </a>
-    <a href="#case">See sample report</a>
-  </div>
-  <div class="badges">
-    <img alt="Python 3.11+" src="https://img.shields.io/badge/python-3.11+-blue">
-    <a href="https://github.com/The1keyy/security-automation-pipeline/actions/workflows/tests.yml"><img alt="tests: passing" src="https://img.shields.io/github/actions/workflow/status/The1keyy/security-automation-pipeline/tests.yml?branch=main&amp;label=tests"></a>
-    <img alt="MIT license" src="https://img.shields.io/badge/license-MIT-blue">
-  </div>
-</section>
-
-<!-- PIPELINE -->
-<section aria-labelledby="how">
-  <h2 id="how">How it works</h2>
-  <ol class="pipe">
-    <li><b>Detect</b><span>14 sign-in rules flag suspicious events.</span></li>
-    <li><b>Enrich</b><span>8 IP intel sources add context.</span></li>
-    <li><b>Risk + confidence</b><span>Threat, behavior, impact, correlation. Confidence is separate.</span></li>
-    <li><b>Safe response</b><span>approval · allowlists · dry-run · rate limits</span></li>
-    <li><b>Report</b><span>Text and HTML incident reports.</span></li>
-  </ol>
-</section>
-
-<!-- DIFFERENT -->
-<section aria-labelledby="diff">
-  <h2 id="diff">What makes this different</h2>
-  <div class="cards">
-    <article class="card">
-      <h3>Explainable</h3>
-      <p>Risk and confidence are separate, and the report shows how the assessment was produced.</p>
-    </article>
-    <article class="card">
-      <h3>Safe</h3>
-      <p>Containment is guarded by dry-run mode, allowlists, rate limits, approval, and pre-approved playbooks.</p>
-    </article>
-    <article class="card">
-      <h3>Tested</h3>
-      <p>Benign and malicious scenarios are validated with automated pytest tests, including false-positive handling.</p>
-    </article>
+    <aside class="result" aria-label="Sample incident result">
+      <p class="label">Sample incident</p>
+      <p class="score">86 <span class="score-unit">/ 90</span></p>
+      <p class="severity"><i aria-hidden="true"></i> Critical</p>
+      <dl class="metrics">
+        <div><dt>Confidence</dt><dd>10 / 10</dd></div>
+        <div><dt>Response</dt><dd>Human approval required</dd></div>
+        <div><dt>ATT&amp;CK techniques</dt><dd>4</dd></div>
+      </dl>
+    </aside>
   </div>
 </section>
 
-<!-- RESULTS -->
-<section aria-labelledby="results">
-  <h2 id="results">Key results</h2>
-  <div class="stats">
-    <div class="stat"><b>14</b><span>sign-in detectors</span></div>
-    <div class="stat"><b>13</b><span>pytest checks</span></div>
-    <div class="stat"><b>8</b><span>enrichment sources</span></div>
-    <div class="stat"><b>90</b><span>maximum risk score</span></div>
-  </div>
-  <ul class="facts">
-    <li>Detectors cover brute force, spray, impossible travel, and MFA fatigue.</li>
-    <li>A benign login stays quiet, and the tests check that.</li>
-    <li>One enrichment failure does not stop the other sources.</li>
-    <li>The sample case maps to four ATT&amp;CK techniques: T1078, T1621, T1098, T1114.003.</li>
-  </ul>
-  <div class="synth">
-    <dl>
-      <div><dt>Precision</dt><dd class="mono">1.00</dd></div>
-      <div><dt>Recall</dt><dd class="mono">1.00</dd></div>
-      <div><dt>False-positive rate</dt><dd class="mono">0.00</dd></div>
-    </dl>
-    <p>Synthetic validation results only. These metrics are not production detection-performance claims.</p>
-    <p style="margin:8px 0 0">The suite covers normal login, brute force, password spray, credential stuffing, success after failure, impossible travel, VPN suppression, Tor login, new device, and malicious versus benign cases.</p>
+<section class="section" id="overview" aria-labelledby="why">
+  <div class="wrap">
+    <p class="kicker">Overview</p>
+    <h2 id="why">Why this exists</h2>
+    <p>A SOC cannot investigate every alert. This pipeline adds context, a separate confidence score, and a person in the loop before containment.</p>
+    <div class="note">
+      <p><strong>Read this first.</strong> It is a synthetic portfolio lab, not a production detection benchmark. Containment is simulated: it does not disable live accounts, revoke live sessions, or change firewall rules. A provider can fail without stopping the others, and missing evidence is listed instead of guessed.</p>
+    </div>
   </div>
 </section>
 
-<!-- SAMPLE CASE -->
-<section id="case" aria-labelledby="case-h">
-  <h2 id="case-h">One sample case, end to end</h2>
-  <p class="muted">The pipeline produced this report from synthetic events in <code>sample_logs/</code>.</p>
-  <div class="case">
-    <figure class="frame">
-      <div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
-      <img src="https://the1keyy.github.io/security-automation-pipeline/ss/html-incident-report.jpg" width="1200" height="800" loading="lazy" alt="HTML incident report from the synthetic lab">
-      <figcaption>The HTML incident report from the synthetic lab.</figcaption>
-    </figure>
-    <div class="codebox has-copy">
-      <button class="btn copy" type="button" data-copy="out">Copy</button>
+<section class="section" id="architecture" aria-labelledby="how">
+  <div class="wrap">
+    <p class="kicker">Architecture</p>
+    <h2 id="how">How it works</h2>
+    <p class="lede">Five stages. Detect, enrich, score risk separately from confidence, hold containment for a person, then write the report.</p>
+    <ol class="pipe">
+      <li><span class="num">01</span><b>Detect</b><span>14 sign-in rules flag suspicious events.</span></li>
+      <li><span class="num">02</span><b>Enrich</b><span>8 IP intel sources add context.</span></li>
+      <li><span class="num">03</span><b>Risk + confidence</b><span>Threat, behavior, impact, correlation. Confidence is separate.</span></li>
+      <li><span class="num">04</span><b>Safe response</b><span>approval · allowlists · dry-run · rate limits</span></li>
+      <li><span class="num">05</span><b>Report</b><span>Text and HTML incident reports.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="section" id="different" aria-labelledby="diff">
+  <div class="wrap">
+    <p class="kicker">Design choices</p>
+    <h2 id="diff">What makes this different</h2>
+    <div class="cards">
+      <article class="card">
+        <p class="kicker">01</p>
+        <h3>Explainable</h3>
+        <p>Risk and confidence are separate, and the report shows how the assessment was produced.</p>
+      </article>
+      <article class="card">
+        <p class="kicker">02</p>
+        <h3>Safe</h3>
+        <p>Containment is guarded by dry-run mode, allowlists, rate limits, approval, and pre-approved playbooks.</p>
+      </article>
+      <article class="card">
+        <p class="kicker">03</p>
+        <h3>Tested</h3>
+        <p>Benign and malicious scenarios are validated with automated pytest tests, including false-positive handling.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="results" aria-labelledby="results-h">
+  <div class="wrap">
+    <p class="kicker">Results</p>
+    <h2 id="results-h">Key results</h2>
+    <div class="stats">
+      <div class="stat"><b>14</b><span>sign-in detectors</span></div>
+      <div class="stat"><b>13</b><span>pytest checks</span></div>
+      <div class="stat"><b>8</b><span>enrichment sources</span></div>
+      <div class="stat"><b>90</b><span>maximum risk score</span></div>
+    </div>
+    <ul class="facts">
+      <li>Detectors cover brute force, spray, impossible travel, and MFA fatigue.</li>
+      <li>A benign login stays quiet, and the tests check that.</li>
+      <li>One enrichment failure does not stop the other sources.</li>
+      <li>The sample case maps to four ATT&amp;CK techniques: T1078, T1621, T1098, T1114.003.</li>
+    </ul>
+    <div class="synth">
+      <dl>
+        <div><dt>Precision</dt><dd>1.00</dd></div>
+        <div><dt>Recall</dt><dd>1.00</dd></div>
+        <div><dt>False-positive rate</dt><dd>0.00</dd></div>
+      </dl>
+      <p>Synthetic validation results only. These metrics are not production detection-performance claims.</p>
+      <p>The suite covers normal login, brute force, password spray, credential stuffing, success after failure, impossible travel, VPN suppression, Tor login, new device, and malicious versus benign cases.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="incident" aria-labelledby="case-h">
+  <div class="wrap">
+    <p class="kicker">Incident</p>
+    <h2 id="case-h">One sample case, end to end</h2>
+    <p class="muted">The pipeline produced this report from synthetic events in <code>sample_logs/</code>.</p>
+    <div class="case">
+      <figure class="frame">
+        <a href="ss/html-incident-report.jpg">
+          <img src="ss/html-incident-report.jpg" width="1024" height="801" loading="lazy" alt="HTML incident report from the synthetic lab">
+        </a>
+        <figcaption>The HTML incident report from the synthetic lab.</figcaption>
+      </figure>
+      <div class="codebox">
+        <button class="btn copy" type="button" data-copy="out">Copy</button>
 <pre id="out">Severity: <span class="crit">CRITICAL</span>
 Risk Score: 86/90
 Confidence: 10/10
 Action: PREAPPROVED_PLAYBOOK_ONLY
 Requires Approval: True
 Automatic: False</pre>
-      <div class="risk">
-        <div class="row"><span>Risk score</span><b>86 of 90</b></div>
-        <div class="meter" role="img" aria-label="Risk score 86 out of 90"><i></i></div>
-        <small>Nothing runs automatically. A person approves the playbook first.</small>
+        <div class="risk">
+          <div class="row"><span>Risk score</span><b>86 of 90</b></div>
+          <div class="meter" role="img" aria-label="Risk score 86 out of 90, severity critical"><i></i></div>
+          <small>Nothing runs automatically. A person approves the playbook first.</small>
+        </div>
       </div>
     </div>
   </div>
-  <div class="techs" aria-label="ATT&CK techniques in the sample incident">
-    <a class="chip" href="https://attack.mitre.org/techniques/T1078/"><b>T1078</b><span>Valid Accounts</span></a>
-    <a class="chip" href="https://attack.mitre.org/techniques/T1621/"><b>T1621</b><span>Multi-Factor Authentication Request Generation</span></a>
-    <a class="chip" href="https://attack.mitre.org/techniques/T1098/"><b>T1098</b><span>Account Manipulation</span></a>
-    <a class="chip" href="https://attack.mitre.org/techniques/T1114/003/"><b>T1114.003</b><span>Email Forwarding Rule</span></a>
+</section>
+
+<section class="section" id="evidence" aria-labelledby="valid">
+  <div class="wrap">
+    <p class="kicker">Validation</p>
+    <h2 id="valid">Validated behavior</h2>
+    <p class="muted">Malicious sequences trigger. Benign activity stays quiet. VPN context can suppress a false impossible-travel alert.</p>
+    <div class="evidence">
+      <figure class="frame">
+        <p class="kicker">Benign baseline</p>
+        <a href="ss/pytest-normal-login.jpg">
+          <img src="ss/pytest-normal-login.jpg" width="1024" height="106" loading="lazy" alt="Pytest result for a normal login that stays quiet">
+        </a>
+        <figcaption><b>Normal login stays quiet.</b> A benign sign-in stays quiet. No suspicious detection is expected.</figcaption>
+      </figure>
+      <figure class="frame">
+        <p class="kicker">Detection</p>
+        <a href="ss/pytest-impossible-travel.jpg">
+          <img src="ss/pytest-impossible-travel.jpg" width="1024" height="108" loading="lazy" alt="Pytest result for impossible travel detection">
+        </a>
+        <figcaption><b>Impossible travel triggers.</b> A geographically impossible login sequence triggers detection.</figcaption>
+      </figure>
+      <figure class="frame">
+        <p class="kicker">False-positive handling</p>
+        <a href="ss/pytest-benign-vpn.jpg">
+          <img src="ss/pytest-benign-vpn.jpg" width="1024" height="97" loading="lazy" alt="Pytest result showing VPN context suppresses impossible travel">
+        </a>
+        <figcaption><b>Known VPN suppresses impossible travel.</b> The impossible-travel alert is suppressed when VPN context explains the location change.</figcaption>
+      </figure>
+    </div>
   </div>
 </section>
 
-<!-- VALIDATED -->
-<section aria-labelledby="valid">
-  <h2 id="valid">Validated behavior</h2>
-  <p class="muted">Malicious sequences trigger. Benign activity stays quiet. VPN context can suppress a false impossible-travel alert.</p>
-  <div class="evidence">
-    <figure class="frame">
-      <img src="ss/pytest-normal-login.jpg" width="1024" height="106" loading="lazy" alt="Pytest result for a normal login that stays quiet">
-      <figcaption><b>Normal login.</b> A benign sign-in stays quiet. No suspicious detection is expected.</figcaption>
-    </figure>
-    <figure class="frame">
-      <img src="ss/pytest-impossible-travel.jpg" width="1024" height="108" loading="lazy" alt="Pytest result for impossible travel detection">
-      <figcaption><b>Impossible travel.</b> A geographically impossible login sequence triggers detection.</figcaption>
-    </figure>
-    <figure class="frame">
-      <img src="ss/pytest-benign-vpn.jpg" width="1024" height="97" loading="lazy" alt="Pytest result showing VPN context suppresses impossible travel">
-      <figcaption><b>Benign VPN.</b> The impossible-travel alert is suppressed when VPN context explains the location change.</figcaption>
-    </figure>
+<section class="section" id="controls" aria-labelledby="controls-h">
+  <div class="wrap">
+    <p class="kicker">Response</p>
+    <h2 id="controls-h">Safety controls</h2>
+    <p>Automation stops at the decision. Containment waits for a person, and the lab records the action instead of sending it.</p>
+    <div class="controls">
+      <article class="control">
+        <h3>Human approval</h3>
+        <p>Nothing runs automatically. A person approves the playbook first. Critical cases stay on <code>PREAPPROVED_PLAYBOOK_ONLY</code> with approval required.</p>
+      </article>
+      <article class="control">
+        <h3>Allowlists</h3>
+        <p>Allowlists sit in front of response actions, alongside the approval check.</p>
+      </article>
+      <article class="control">
+        <h3>Dry run</h3>
+        <p>Containment is simulated. The lab does not disable live accounts, revoke live sessions, or change firewall rules.</p>
+      </article>
+      <article class="control">
+        <h3>Rate limits</h3>
+        <p>Response actions are rate limited, so a burst of alerts cannot fire a burst of actions.</p>
+      </article>
+      <article class="control">
+        <h3>Pre-approved playbooks</h3>
+        <p>Only a pre-approved playbook may be selected. The sample case does not run an unnamed action.</p>
+      </article>
+      <article class="control">
+        <h3>Audit and rollback</h3>
+        <p>Response records an audit trail and keeps rollback mappings for the actions it knows.</p>
+      </article>
+    </div>
   </div>
 </section>
 
-<!-- WHY -->
-<section aria-labelledby="why">
-  <h2 id="why">Why this exists</h2>
-  <p>A SOC cannot investigate every alert. This pipeline adds context, a separate confidence score, and a person in the loop before containment.</p>
-  <div class="note">
-    <p><strong>Read this first.</strong> It is a synthetic portfolio lab, not a production detection benchmark. Containment is simulated: it does not disable live accounts, revoke live sessions, or change firewall rules. A provider can fail without stopping the others, and missing evidence is listed instead of guessed.</p>
+<section class="section" id="attack" aria-labelledby="attack-h">
+  <div class="wrap">
+    <p class="kicker">Mapping</p>
+    <h2 id="attack-h">ATT&amp;CK in the sample</h2>
+    <p class="muted">The sample case maps to four techniques. Each card is the behavior the report cited, not a claim that every technique in ATT&amp;CK is covered.</p>
+    <div class="techs" aria-label="ATT&CK techniques in the sample incident">
+      <a class="chip" href="https://attack.mitre.org/techniques/T1078/"><b>T1078</b><span>Valid Accounts</span></a>
+      <a class="chip" href="https://attack.mitre.org/techniques/T1621/"><b>T1621</b><span>Multi-Factor Authentication Request Generation</span></a>
+      <a class="chip" href="https://attack.mitre.org/techniques/T1098/"><b>T1098</b><span>Account Manipulation</span></a>
+      <a class="chip" href="https://attack.mitre.org/techniques/T1114/003/"><b>T1114.003</b><span>Email Forwarding Rule</span></a>
+    </div>
   </div>
-  <aside class="callout" style="margin-top:24px">
-    <h3>Research-informed scoring</h3>
-    <p>Risk prioritization is research-inspired, using ideas from AlertPro, NIST SP 800-30, MITRE ATT&amp;CK, and recent SOC alert-prioritization research. It does not reproduce those models, and it does not calculate CVSS for alerts.</p>
-    <a href="#research">Research basis</a>
-  </aside>
 </section>
 
-<!-- RUN IT -->
-<section aria-labelledby="run">
-  <h2 id="run">Run it</h2>
-  <div class="codebox has-copy">
-    <button class="btn copy" type="button" data-copy="qs">Copy</button>
+<section class="section" id="research" aria-labelledby="research-h">
+  <div class="wrap">
+    <p class="kicker">Research</p>
+    <h2 id="research-h">Research basis</h2>
+    <p>Risk prioritization is research-inspired, using ideas from AlertPro, NIST SP 800-30, MITRE ATT&amp;CK, and recent SOC alert-prioritization research.</p>
+    <p class="muted">The score is research-inspired. It does not reproduce the cited models, and it does not calculate CVSS for alerts.</p>
+    <ul class="refs">
+      <li><a href="https://doi.org/10.1016/j.cose.2023.103583">AlertPro, Computers &amp; Security, 2024</a> <span>prioritize with context</span></li>
+      <li><a href="https://doi.org/10.1007/s44443-026-01172-w">Guo et al., 2026</a> <span>score across more than one dimension</span></li>
+      <li><a href="https://doi.org/10.6028/NIST.SP.800-30r1">NIST SP 800-30 Rev. 1</a> <span>likelihood, context, and impact</span></li>
+      <li><a href="https://attack.mitre.org/">MITRE ATT&amp;CK</a> <span>map behavior to techniques</span></li>
+      <li><a href="https://www.first.org/cvss/v4.0/">CVSS v4.0</a> <span>clear components and severity bands only</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="run" aria-labelledby="run-h">
+  <div class="wrap">
+    <p class="kicker">Setup</p>
+    <h2 id="run-h">Run it</h2>
+    <div class="codebox">
+      <button class="btn copy" type="button" data-copy="qs">Copy</button>
 <pre id="qs">python3 -m venv .venv &amp;&amp; source .venv/bin/activate
 pip install -r requirements.txt
 pytest</pre>
-  </div>
-  <p style="margin-top:16px">To run <code>main.py</code>, copy <code>.env.example</code> to <code>.env</code> first and fill in <code>ABUSEIPDB_API_KEY</code>, <code>VIRUSTOTAL_API_KEY</code>, <code>GREYNOISE_API_KEY</code>, and <code>OTX_API_KEY</code>.</p>
-</section>
-
-<!-- MAKE IT YOURS -->
-<section aria-labelledby="mine">
-  <h2 id="mine">Make it yours</h2>
-  <p>It is MIT licensed. Fork it, extend it, and test your changes.</p>
-  <ol class="steps">
-    <li><div>Fork the repository, or use it as a template.</div></li>
-    <li><div>Add your API keys, or run it on the sample logs.</div></li>
-    <li><div>Run <code>pytest</code>, then change something and see what fails.</div></li>
-  </ol>
-  <div class="actions">
-    <a class="btn primary" href="https://github.com/The1keyy/security-automation-pipeline/generate">Use this template</a>
-    <a class="btn" href="https://github.com/The1keyy/security-automation-pipeline/fork">Fork</a>
-    <a class="btn" href="https://github.com/The1keyy/security-automation-pipeline">Repository</a>
-  </div>
-  <h3>Ideas to extend</h3>
-  <ul class="ideas">
-    <li>A new sign-in detector</li>
-    <li>Another enrichment source</li>
-    <li>A new response playbook</li>
-    <li>A different report format</li>
-  </ul>
-</section>
-
-<!-- DETAILS -->
-<section aria-labelledby="more">
-  <h2 id="more">Under the hood</h2>
-  <details>
-    <summary>Project structure</summary>
-    <div>
-      <ul class="tree">
-        <li><code>detections/</code><span>sign-in rules</span></li>
-        <li><code>enrichment/</code><span>IP intel lookups and a local cache</span></li>
-        <li><code>risk/</code><span>explainable score and severity</span></li>
-        <li><code>response/</code><span>approval, allowlists, playbooks, dry-run, audit, rollback</span></li>
-        <li><code>reports/</code><span>text and HTML writers, plus reports/sample/</span></li>
-        <li><code>tests/</code><span>pytest suite</span></li>
-        <li><code>config/</code><span>weights and thresholds</span></li>
-        <li><code>sample_logs/</code><span>synthetic events</span></li>
-        <li><code>ss/</code><span>screenshots from lab runs</span></li>
-        <li><code>docs/</code><span>this site</span></li>
-      </ul>
-      <p class="small muted" style="margin:16px 0 0">Built with Python 3.13, pytest, and requests. Reports are plain text and HTML.</p>
     </div>
-  </details>
-  <details id="research">
-    <summary>Research basis</summary>
-    <div>
-      <p class="small muted">The score is research-inspired. It does not reproduce the cited models, and it does not calculate CVSS for alerts.</p>
-      <ul class="refs">
-        <li><a href="https://doi.org/10.1016/j.cose.2023.103583">AlertPro, Computers &amp; Security, 2024</a> <span>prioritize with context</span></li>
-        <li><a href="https://doi.org/10.1007/s44443-026-01172-w">Guo et al., 2026</a> <span>score across more than one dimension</span></li>
-        <li><a href="https://doi.org/10.6028/NIST.SP.800-30r1">NIST SP 800-30 Rev. 1</a> <span>likelihood, context, and impact</span></li>
-        <li><a href="https://attack.mitre.org/">MITRE ATT&amp;CK</a> <span>map behavior to techniques</span></li>
-        <li><a href="https://www.first.org/cvss/v4.0/">CVSS v4.0</a> <span>clear components and severity bands only</span></li>
-      </ul>
-    </div>
-  </details>
+    <p class="small gap-top">To run <code>main.py</code>, copy <code>.env.example</code> to <code>.env</code> first and fill in <code>ABUSEIPDB_API_KEY</code>, <code>VIRUSTOTAL_API_KEY</code>, <code>GREYNOISE_API_KEY</code>, and <code>OTX_API_KEY</code>.</p>
+  </div>
 </section>
 
-<!-- ROADMAP -->
-<section aria-labelledby="road">
-  <h2 id="road">Roadmap</h2>
-  <ul class="road">
-    <li>Treat a missing ASN as unknown, not a match, in impossible travel.</li>
-    <li>Run detect, score, and report from one command. <code>main.py</code> currently enriches a single IP.</li>
-  </ul>
+<section class="section" id="mine" aria-labelledby="mine-h">
+  <div class="wrap">
+    <p class="kicker">Extend</p>
+    <h2 id="mine-h">Make it yours</h2>
+    <p>It is MIT licensed. Fork it, extend it, and test your changes.</p>
+    <ol class="steps">
+      <li><div>Fork the repository, or use it as a template.</div></li>
+      <li><div>Add your API keys, or run it on the sample logs.</div></li>
+      <li><div>Run <code>pytest</code>, then change something and see what fails.</div></li>
+    </ol>
+    <div class="actions">
+      <a class="btn primary" href="https://github.com/The1keyy/security-automation-pipeline/generate">Use this template</a>
+      <a class="btn" href="https://github.com/The1keyy/security-automation-pipeline/fork">Fork</a>
+      <a class="btn" href="https://github.com/The1keyy/security-automation-pipeline">Repository</a>
+    </div>
+    <h3>Ideas to extend</h3>
+    <ul class="ideas">
+      <li>A new sign-in detector</li>
+      <li>Another enrichment source</li>
+      <li>A new response playbook</li>
+      <li>A different report format</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="more" aria-labelledby="more-h">
+  <div class="wrap">
+    <p class="kicker">Repository</p>
+    <h2 id="more-h">Under the hood</h2>
+    <details open>
+      <summary>Project structure</summary>
+      <div>
+        <ul class="tree">
+          <li><code>detections/</code><span>sign-in rules</span></li>
+          <li><code>enrichment/</code><span>IP intel lookups and a local cache</span></li>
+          <li><code>risk/</code><span>explainable score and severity</span></li>
+          <li><code>response/</code><span>approval, allowlists, playbooks, dry-run, audit, rollback</span></li>
+          <li><code>reports/</code><span>text and HTML writers, plus reports/sample/</span></li>
+          <li><code>tests/</code><span>pytest suite</span></li>
+          <li><code>config/</code><span>weights and thresholds</span></li>
+          <li><code>sample_logs/</code><span>synthetic events</span></li>
+          <li><code>ss/</code><span>screenshots from lab runs</span></li>
+          <li><code>docs/</code><span>this site</span></li>
+        </ul>
+        <p class="small muted gap-top">Built with Python 3.13, pytest, and requests. Reports are plain text and HTML.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section class="section" id="road" aria-labelledby="road-h">
+  <div class="wrap">
+    <p class="kicker">Next</p>
+    <h2 id="road-h">Roadmap</h2>
+    <ul class="road">
+      <li>Treat a missing ASN as unknown, not a match, in impossible travel.</li>
+      <li>Run detect, score, and report from one command. <code>main.py</code> currently enriches a single IP.</li>
+    </ul>
+  </div>
 </section>
 
 </main>
@@ -428,19 +388,30 @@ pytest</pre>
 </footer>
 
 <script>
-document.querySelectorAll('a[href="#research"]').forEach(function(a){
-  a.addEventListener('click',function(){
-    var d=document.getElementById('research');
-    if(d) d.open=true;
+document.querySelectorAll('[data-copy]').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var t = document.getElementById(b.dataset.copy).innerText;
+    var done = function () {
+      b.textContent = 'Copied';
+      setTimeout(function () { b.textContent = 'Copy'; }, 1500);
+    };
+    if (navigator.clipboard) navigator.clipboard.writeText(t).then(done, function () {});
   });
 });
-document.querySelectorAll('[data-copy]').forEach(function(b){
-  b.addEventListener('click',function(){
-    var t=document.getElementById(b.dataset.copy).innerText;
-    var done=function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)};
-    if(navigator.clipboard){navigator.clipboard.writeText(t).then(done,function(){})}
+
+var links = Array.prototype.slice.call(document.querySelectorAll('.site-nav a'));
+var sections = links.map(function (a) { return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+function mark() {
+  var y = window.scrollY + 100;
+  var current = sections[0];
+  sections.forEach(function (s) { if (s.offsetTop <= y) current = s; });
+  links.forEach(function (a) {
+    if (current && a.getAttribute('href') === '#' + current.id) a.setAttribute('aria-current', 'true');
+    else a.removeAttribute('aria-current');
   });
-});
+}
+mark();
+window.addEventListener('scroll', mark, { passive: true });
 </script>
 </body>
 </html>
